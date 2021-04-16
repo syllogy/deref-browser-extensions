@@ -24,8 +24,8 @@ export const regionNameMap = {
   'us-west-1': 'US West (N. California)',
   'us-west-2': 'US West (Oregon)',
 
-  //'us-gov-east-1': 'AWS GovCloud (US-East)',
-  //'us-gov-west-1': 'AWS GovCloud (US-West)',
+  'us-gov-east-1': 'AWS GovCloud (US-East)',
+  'us-gov-west-1': 'AWS GovCloud (US-West)',
 
   // The below regions appear in the pricing file but are unsupported as it's
   // unclear what their region code is.
