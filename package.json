@@ -3,7 +3,11 @@
   "version": "0.0.1",
   "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "./scripts/dev.sh",
+    "lint": "cd ./dist && web-ext lint",
+    "build": "cd ./dist && web-ext build",
+    "build-and-sign": "cd ./dist && web-ext sign",
+    "reindex-prices": "./scripts/reindex-prices.sh"
   },
   "repository": {
     "type": "git",
@@ -18,6 +22,8 @@
   },
   "devDependencies": {
     "@types/node": "^14.14.41",
-    "@types/node-fetch": "^2.5.10"
+    "@types/node-fetch": "^2.5.10",
+    "esbuild": "^0.11.11",
+    "web-ext": "^6.0.0"
   }
 }
