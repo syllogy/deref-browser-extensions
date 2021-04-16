@@ -100,7 +100,7 @@ const makeIndexSearch = (record: CsvRecord): IndexSearch => ({
   preInstalledSw: record['Pre Installed S/W'],
 });
 
-export const main = async () => {
+const main = async () => {
   await updatePricingFile();
 
   const parser = fs.createReadStream(pricingFilePath).pipe(
@@ -110,7 +110,7 @@ export const main = async () => {
     }),
   );
 
-  const prices: Dict<number> = {};
+  const prices: Record<string, number> = {};
   for await (const untypedRecord of parser) {
     const record: CsvRecord = untypedRecord;
     if (
@@ -133,10 +133,11 @@ export const main = async () => {
     }
   }
   await fs.promises.writeFile(
-    path.join(
-      requireEnvString('DEREF_ROOT'),
-      'packages/aes/dist/price-index.json',
-    ),
+    path.join(process.cwd(), './dist/price-index.json'),
     JSON.stringify(prices, null, 2),
   );
 };
+
+if (require.main === module) {
+  void main();
+}

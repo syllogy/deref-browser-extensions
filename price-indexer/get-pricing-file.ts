@@ -1,16 +1,11 @@
 import fs from 'fs';
 import fetch from 'node-fetch';
 import path from 'path';
-import { asError } from '~/packages/util';
-import { requireEnvString } from '~/packages/util/env';
 
 const pricingUrl =
   'https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEC2/current/index.csv';
 
-export const pricingDirPath = path.join(
-  requireEnvString('DEREF_ROOT'),
-  '.pricing',
-);
+export const pricingDirPath = path.join(process.cwd(), '.pricing');
 
 const etagPath = path.join(pricingDirPath, 'current-etag');
 
@@ -25,8 +20,7 @@ const getSavedEtag = async (): Promise<string | null> => {
     return await fs.promises.readFile(etagPath, {
       encoding: 'utf8',
     });
-  } catch (unknownErr: unknown) {
-    const err = asError(unknownErr);
+  } catch (err) {
     if (err.code === 'ENOENT') {
       return null;
     }
