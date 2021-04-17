@@ -1,15 +1,17 @@
-AWS Enhancement Suite by Deref
-==============================
+# Deref - AWS Enhancement Suite
 
-Building the extension
-----------------------
-1. Pull the repository
-`bash
-git clone git@github.com:deref/wext.git && cd wext
-`
+Browser extension that enhances the AWS Console.
 
-2. Install the dependencies
-`npm install`
+## Installation
 
-3. Start the dev environment
-`npm run build`
+To install, visit the extension page for your browser of choice:
+
+[![Firefox](assets/firefox.png 'Firefox')](https://addons.mozilla.org/addon/deref/)
+
+## Support
+
+Try [our GitHub Discussions board](https://github.com/deref/deref-browser-extensions/discussions) or email [support@deref.io](mailto:support.deref.io).
+
+## Contributing
+
+See the [contributing guide](./CONTRIBUTING.md) to get started.
