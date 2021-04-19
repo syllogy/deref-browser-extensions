@@ -30,6 +30,19 @@ export const regionNameMap = {
   // The below regions appear in the pricing file but are unsupported as it's
   // unclear what their region code is.
 
+  // Seems like these are "Local Zones":
+  // aws.amazon.com/about-aws/global-infrastructure/localzones
+  // You can see how to enable these in the console, see for example us-east-1
+  // and us-west-2, which have a different subset of local zones you can turn
+  // on:
+  //  - console.aws.amazon.com/ec2/v2/home?region=us-east-1#Settings:tab=zones
+  //  - us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#Settings:tab=zones
+  //
+  // The "Verizon" zones are part of Wavelength.
+  //
+  // You can list zones with a command like:
+  // aws ec2 --region us-east-1 describe-availability-zones --all-availability-zones
+
   //"Asia Pacific (SKT) - Daejeon",
   //'Asia Pacific (KDDI) - Tokyo',
   //"US East (Boston)",
