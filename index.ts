@@ -1,4 +1,5 @@
 import { browser } from 'webextension-polyfill-ts';
+import { doWarn } from './logging';
 import {
   getIndexKey,
   IndexSearch,
@@ -13,7 +14,7 @@ const asyncSleep = (timeMilliseconds: number): Promise<void> =>
 const getEc2Iframe = (): HTMLIFrameElement | null => {
   const iframe = document.getElementById('instance-lx-gwt-frame');
   if (!(iframe instanceof HTMLIFrameElement)) {
-    console.warn('Expected element is not an iframe');
+    doWarn('Expected element is not an iframe');
     return null;
   }
   return iframe;
@@ -112,7 +113,7 @@ const displayPrice = async () => {
 
   const derefContainer = await getDerefContainer();
   if (!derefContainer.contentWindow) {
-    console.warn('Deref container has no contentWindow');
+    doWarn('Deref container has no contentWindow');
     return;
   }
 
