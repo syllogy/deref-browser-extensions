@@ -1,3 +1,8 @@
+@font-face {
+  font-family: 'Inter';
+  src:  url('./Inter.var.woff2') format('woff2');
+}
+
 body {
   font-size: 16px;
   --outer-padding: 10px;
