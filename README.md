@@ -11,5 +11,12 @@ git clone git@github.com:deref/wext.git && cd wext
 2. Install the dependencies
 `npm install`
 
-3. Start the dev environment
+3. Build the extension
 `npm run build`
+
+Starting the dev environment
+----------------------------
+1. Pull the repository and install the dependencies (see above)
+
+2. Start the dev environment
+`npm run dev`
