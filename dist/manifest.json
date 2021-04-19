@@ -1,0 +1,12 @@
+{
+  "manifest_version": 2,
+  "name": "Deref — AWS Enhancement Suite",
+  "version": "0.0.3",
+  "content_scripts": [
+    {
+      "matches": ["*://*.aws.amazon.com/*"],
+      "js": ["./src/index.js"]
+    }
+  ],
+  "web_accessible_resources": ["assets/*", "src/iframe-script.js"]
+}

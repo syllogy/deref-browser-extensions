@@ -1,0 +1,30 @@
+{
+  "name": "wext",
+  "version": "0.0.3",
+  "description": "",
+  "scripts": {
+    "dev": "./scripts/dev.sh",
+    "dev-chromium": "./scripts/dev-chromium.sh",
+    "lint": "cd ./dist && web-ext lint",
+    "build": "./scripts/build.sh && cd ./dist && web-ext build",
+    "build-and-sign": "./scripts/build.sh && cd ./dist && web-ext sign --channel listed",
+    "reindex-prices": "./scripts/reindex-prices.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deref/wext.git"
+  },
+  "author": "",
+  "homepage": "https://github.com/deref/wext#readme",
+  "dependencies": {
+    "csv-parse": "^4.15.4",
+    "node-fetch": "^2.6.1",
+    "webextension-polyfill-ts": "^0.25.0"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.41",
+    "@types/node-fetch": "^2.5.10",
+    "esbuild": "^0.11.11",
+    "web-ext": "^6.0.0"
+  }
+}
