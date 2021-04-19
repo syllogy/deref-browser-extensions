@@ -1,4 +1,4 @@
-import type { InstanceInfo } from '~/packages/aes/instance-price';
+import type { InstanceInfo } from './index';
 
 const renderPrice = async ({ type, hourlyCost }: InstanceInfo) => {
   document.body.style.display = 'unset';

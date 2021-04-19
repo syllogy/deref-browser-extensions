@@ -55,7 +55,7 @@ const getInstanceSearch = (): IndexSearch | null => {
 let priceIndex: Record<string, number | null> | null = null;
 const getHourlyPrice = async (search: IndexSearch): Promise<number | null> => {
   if (!priceIndex) {
-    const url = browser.runtime.getURL('./price-index.json');
+    const url = browser.runtime.getURL('./assets/price-index.json');
     const json = await (await fetch(url)).text();
     priceIndex = JSON.parse(json) as Record<string, number>;
   }
@@ -93,7 +93,7 @@ const getDerefContainer = async (): Promise<HTMLIFrameElement> => {
   derefContainer.style.border = '0';
   derefContainer.style.marginTop = '1em';
   derefContainer.style.marginBottom = '1em';
-  derefContainer.src = browser.runtime.getURL('./price.html');
+  derefContainer.src = browser.runtime.getURL('./assets/price.html');
   derefContainer.onload = () => void displayPrice();
   parentDiv.append(derefContainer);
   return derefContainer;
