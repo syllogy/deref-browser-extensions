@@ -6,6 +6,7 @@ A browser extension that enhances the AWS Console.
 
 To install, visit the extension page for your browser of choice:
 
+[![Chrome](assets/chrome.png 'Chrome')](https://chrome.google.com/webstore/detail/nankdihhphnhbfhhcpncdfofgfdbfpmo)
 [![Firefox](assets/firefox.png 'Firefox')](https://addons.mozilla.org/addon/deref/)
 
 ## Support
