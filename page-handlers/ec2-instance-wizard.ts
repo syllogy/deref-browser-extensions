@@ -4,11 +4,11 @@ import {
   isIndexSearch,
   UnvalidatedIndexSearch,
 } from '~/price-indexer/index-key';
-import { InstanceInfo } from '..';
 import {
   doPageHandler,
   getHourlyPrice,
   getRegion,
+  InstanceInfo,
   makeDerefContainer,
   PageHandler,
   urlMatchesRegex,
