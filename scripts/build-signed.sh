@@ -4,5 +4,5 @@ set -xeuo pipefail
 ./scripts/compile.sh
 (
   cd ./dist
-  web-ext build
+  web-ext sign --channel listed
 )

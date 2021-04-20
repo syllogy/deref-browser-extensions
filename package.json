@@ -6,8 +6,10 @@
     "dev": "./scripts/dev.sh",
     "dev-chromium": "./scripts/dev-chromium.sh",
     "lint": "cd ./dist && web-ext lint",
-    "build": "./scripts/build.sh && cd ./dist && web-ext build",
-    "build-and-sign": "./scripts/build.sh && cd ./dist && web-ext sign --channel listed",
+    "clean": "./scripts/clean.sh",
+    "compile": "./scripts/compile.sh",
+    "build": "./scripts/build.sh",
+    "build-signed": "./scripts/build-signed.sh",
     "reindex-prices": "./scripts/reindex-prices.sh"
   },
   "repository": {
