@@ -29,7 +29,7 @@ const getContentOfElement = (cssSelector: string): string | null =>
   getEc2Iframe()?.contentDocument?.querySelector(cssSelector)?.textContent ??
   null;
 
-const getInstanceSearch = (): IndexSearch | null => {
+const getInstanceSearchFromReviewPage = (): IndexSearch | null => {
   const search: UnvalidatedIndexSearch = {
     operatingSystem: 'Linux',
     preInstalledSw: 'NA',
@@ -43,12 +43,21 @@ const getInstanceSearch = (): IndexSearch | null => {
       )?.split(' - ')[0] ?? null,
   };
 
-  // The below information isn't embedded anywhere on the page for MacOS
-  // instances. mac1.metal is the only available MacOS instance type.
-  if (search.instanceType === 'mac1.metal') {
-    search.instanceType = 'mac1';
-    search.tenancy = 'Host';
-  }
+  return isIndexSearch(search) ? search : null;
+};
+
+const getInstanceSearchFromInstanceSelectionPage = (): IndexSearch | null => {
+  console.log('getting from instance selection');
+  const search: UnvalidatedIndexSearch = {
+    operatingSystem: 'Linux',
+    preInstalledSw: 'NA',
+    location: getRegion(),
+    instanceType:
+      getContentOfElement('span.gwt-InlineLabel:nth-child(2)')?.split(' ')[0] ??
+      null,
+    tenancy: 'Shared', // The user hasn't yet selected a tenancy so assume Shared.
+  };
+  console.log(search);
 
   return isIndexSearch(search) ? search : null;
 };
@@ -59,6 +68,13 @@ const getHourlyPrice = async (search: IndexSearch): Promise<number | null> => {
     const url = browser.runtime.getURL('./assets/price-index.json');
     const json = await (await fetch(url)).text();
     priceIndex = JSON.parse(json) as Record<string, number>;
+  }
+
+  // The below information isn't embedded anywhere on the page for MacOS
+  // instances. mac1.metal is the only available MacOS instance type.
+  if (search.instanceType === 'mac1.metal') {
+    search.instanceType = 'mac1';
+    search.tenancy = 'Host';
   }
   return priceIndex[getIndexKey(search)];
 };
@@ -97,7 +113,9 @@ const getDerefContainer = async (): Promise<HTMLIFrameElement> => {
 };
 
 const displayPrice = async () => {
-  const instanceSearch = getInstanceSearch();
+  const instanceSearch =
+    getInstanceSearchFromReviewPage() ??
+    getInstanceSearchFromInstanceSelectionPage();
   if (!instanceSearch) {
     return;
   }
