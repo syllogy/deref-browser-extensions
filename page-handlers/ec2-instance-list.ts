@@ -16,7 +16,7 @@ import {
 } from './common';
 
 const getEc2Iframe = (): HTMLIFrameElement | null => {
-  const iframe = document.getElementById('instance-lx-gwt-frame');
+  const iframe = document.getElementById('compute-react-frame');
   if (!(iframe instanceof HTMLIFrameElement)) {
     doWarn('Expected element is not an iframe');
     return null;
@@ -28,35 +28,21 @@ const getContentOfElement = (cssSelector: string): string | null =>
   getEc2Iframe()?.contentDocument?.querySelector(cssSelector)?.textContent ??
   null;
 
-const getInstanceSearchFromReviewPage = (): IndexSearch | null => {
-  const tenancyString = getContentOfElement(
-    '.lx-IQ > tbody:nth-child(1) > tr:nth-child(13) > td:nth-child(2) > div:nth-child(1)',
-  )?.split(' - ')[0];
+const getLabelledValue = (labelName: string): string | null =>
+  getContentOfElement(`[data-analytics="${labelName}"] ~ div`);
+
+const getInstanceSearch = (): IndexSearch | null => {
+  const tenancyString = getLabelledValue('label-for-details_Tenancy');
   const search: UnvalidatedIndexSearch = {
     operatingSystem: 'Linux',
     preInstalledSw: 'NA',
     location: getRegion(),
-    instanceType: getContentOfElement(
-      '#gwt-debug-liwReviewInstanceTypeTable > table:nth-child(1) > tbody:nth-child(2) > tr:nth-child(2) > td:nth-child(1)',
-    ),
+    instanceType: getLabelledValue('label-for-Instance type'),
     tenancy: tenancyString ? mapTenancyString(tenancyString) : null,
   };
-  console.log('search is');
+
   console.log(search);
 
-  return isIndexSearch(search) ? search : null;
-};
-
-const getInstanceSearchFromInstanceSelectionPage = (): IndexSearch | null => {
-  const search: UnvalidatedIndexSearch = {
-    operatingSystem: 'Linux',
-    preInstalledSw: 'NA',
-    location: getRegion(),
-    instanceType:
-      getContentOfElement('span.gwt-InlineLabel:nth-child(2)')?.split(' ')[0] ??
-      null,
-    tenancy: 'Shared', // The user hasn't yet selected a tenancy so assume Shared.
-  };
   return isIndexSearch(search) ? search : null;
 };
 
@@ -73,27 +59,26 @@ const getDerefContainer = async (): Promise<HTMLIFrameElement> => {
     return existingDiv;
   }
 
-  const parentDiv = ec2Iframe?.contentDocument?.querySelector('.lx-A-');
+  const parentDiv = ec2Iframe?.contentDocument?.querySelector(
+    'h4.awsui-util-ml-m',
+  );
   if (!parentDiv) {
     throw new Error('Parent div not found');
   }
   const derefContainer = makeDerefContainer(derefContainerId);
   derefContainer.style.height = '33px';
   derefContainer.style.minWidth = '550px';
+  derefContainer.style.display = 'block';
   parentDiv.append(derefContainer);
   return derefContainer;
 };
 
-export const ec2InstanceWizard: PageHandler = {
+export const ec2InstanceList: PageHandler = {
   conditions: [
-    urlMatchesRegex(
-      /.*console.aws.amazon.com\/ec2\/v2\/home?.*#LaunchInstanceWizard:/,
-    ),
+    urlMatchesRegex(/.*console.aws.amazon.com\/ec2\/v2\/home?.*#Instances:/),
   ],
   async handler() {
-    const instanceSearch =
-      getInstanceSearchFromReviewPage() ??
-      getInstanceSearchFromInstanceSelectionPage();
+    const instanceSearch = getInstanceSearch();
     if (!instanceSearch) {
       return;
     }

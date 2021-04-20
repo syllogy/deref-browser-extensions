@@ -66,3 +66,16 @@ export const makeDerefContainer = (id: string): HTMLIFrameElement => {
   derefContainer.src = browser.runtime.getURL('./assets/price.html');
   return derefContainer;
 };
+
+export const mapTenancyString = (tenancyString: string): string | null => {
+  if (tenancyString === 'dedicated') {
+    return 'Dedicated';
+  }
+  if (
+    tenancyString.toLowerCase().includes('default') ||
+    tenancyString.toLowerCase().startsWith('shared')
+  ) {
+    return 'Shared';
+  }
+  return null;
+};
