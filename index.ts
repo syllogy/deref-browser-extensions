@@ -84,6 +84,14 @@ export interface InstanceInfo {
   hourlyCost: number;
 }
 
+const makeDerefContainer = (id: string): HTMLIFrameElement => {
+  const derefContainer = document.createElement('iframe');
+  derefContainer.id = id;
+  derefContainer.style.border = '0';
+  derefContainer.src = browser.runtime.getURL('./assets/price.html');
+  return derefContainer;
+};
+
 const getDerefContainer = async (): Promise<HTMLIFrameElement> => {
   const derefContainerId = 'deref-container';
   const ec2Iframe = getEc2Iframe();
@@ -101,46 +109,76 @@ const getDerefContainer = async (): Promise<HTMLIFrameElement> => {
   if (!parentDiv) {
     throw new Error('Parent div not found');
   }
-  const derefContainer = document.createElement('iframe');
-  derefContainer.id = derefContainerId;
+  const derefContainer = makeDerefContainer(derefContainerId);
   derefContainer.style.height = '33px';
   derefContainer.style.minWidth = '550px';
-  derefContainer.style.border = '0';
-  derefContainer.src = browser.runtime.getURL('./assets/price.html');
-  derefContainer.onload = () => void displayPrice();
   parentDiv.append(derefContainer);
   return derefContainer;
 };
 
-const displayPrice = async () => {
-  const instanceSearch =
-    getInstanceSearchFromReviewPage() ??
-    getInstanceSearchFromInstanceSelectionPage();
-  if (!instanceSearch) {
-    return;
-  }
+interface Context {
+  url: string;
+}
+type ConditionFn = (ctx: Context) => boolean;
 
-  const hourlyPrice = await getHourlyPrice(instanceSearch);
-  if (!hourlyPrice) {
-    return;
-  }
-
-  const derefContainer = await getDerefContainer();
-  if (!derefContainer.contentWindow) {
-    doWarn('Deref container has no contentWindow');
-    return;
-  }
-
-  const info: InstanceInfo = {
-    hourlyCost: hourlyPrice,
-    type: instanceSearch.instanceType,
+const urlMatchesRegex = (url: RegExp): ConditionFn => {
+  return (ctx): boolean => {
+    return url.test(ctx.url);
   };
-  derefContainer.contentWindow.postMessage(info, '*');
 };
+
+interface PageHandler {
+  conditions: ConditionFn[];
+  handler: () => Promise<void> | void;
+}
+
+const conditionsAreMet = (conditions: ConditionFn[]): boolean =>
+  conditions.every((c) => c({ url: document.URL }));
+
+const doPageHandler = async ({ conditions, handler }: PageHandler) => {
+  if (conditionsAreMet(conditions)) {
+    await handler();
+  }
+};
+
+const pageHandlers: PageHandler[] = [
+  {
+    conditions: [
+      urlMatchesRegex(
+        /.*console.aws.amazon.com\/ec2\/v2\/home?.*#LaunchInstanceWizard:/,
+      ),
+    ],
+    async handler() {
+      const instanceSearch =
+        getInstanceSearchFromReviewPage() ??
+        getInstanceSearchFromInstanceSelectionPage();
+      if (!instanceSearch) {
+        return;
+      }
+
+      const hourlyPrice = await getHourlyPrice(instanceSearch);
+      if (!hourlyPrice) {
+        return;
+      }
+
+      const derefContainer = await getDerefContainer();
+      derefContainer.onload = () => doPageHandler(this);
+      if (!derefContainer.contentWindow) {
+        doWarn('Deref container has no contentWindow');
+        return;
+      }
+      const info: InstanceInfo = {
+        hourlyCost: hourlyPrice,
+        type: instanceSearch.instanceType,
+      };
+      derefContainer.contentWindow.postMessage(info, '*');
+    },
+  },
+];
 
 const main = async () => {
   while (true) {
-    await displayPrice();
+    await Promise.all(pageHandlers.map(doPageHandler));
     await asyncSleep(1000);
   }
 };
