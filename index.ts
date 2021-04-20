@@ -81,19 +81,15 @@ const getDerefContainer = async (): Promise<HTMLIFrameElement> => {
     return existingDiv;
   }
 
-  const parentDiv = ec2Iframe?.contentDocument?.querySelector(
-    '#gwt-debug-liwReviewView > div:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1)',
-  );
+  const parentDiv = ec2Iframe?.contentDocument?.querySelector('.lx-A-');
   if (!parentDiv) {
     throw new Error('Parent div not found');
   }
   const derefContainer = document.createElement('iframe');
   derefContainer.id = derefContainerId;
-  derefContainer.style.height = '64px';
-  derefContainer.style.minWidth = '500px';
+  derefContainer.style.height = '33px';
+  derefContainer.style.minWidth = '550px';
   derefContainer.style.border = '0';
-  derefContainer.style.marginTop = '1em';
-  derefContainer.style.marginBottom = '1em';
   derefContainer.src = browser.runtime.getURL('./assets/price.html');
   derefContainer.onload = () => void displayPrice();
   parentDiv.append(derefContainer);
