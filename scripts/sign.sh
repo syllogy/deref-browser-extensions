@@ -3,8 +3,7 @@ set -xeuo pipefail
 
 export PATH="$PWD/node_modules/.bin:$PATH"
 
-esbuild --bundle --target=chrome58,firefox57 --outdir='./dist/src' ./*.ts
 (
   cd ./dist
-  web-ext build
+  web-ext sign --channel listed
 )
