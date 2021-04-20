@@ -1,6 +1,6 @@
-# Deref - AWS Enhancement Suite
+# Deref — AWS Enhancement Suite
 
-Browser extension that enhances the AWS Console.
+A browser extension that enhances the AWS Console.
 
 ## Installation
 

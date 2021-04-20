@@ -1,4 +1,5 @@
 import { browser } from 'webextension-polyfill-ts';
+import { doWarn } from './logging';
 import {
   getIndexKey,
   IndexSearch,
@@ -13,7 +14,7 @@ const asyncSleep = (timeMilliseconds: number): Promise<void> =>
 const getEc2Iframe = (): HTMLIFrameElement | null => {
   const iframe = document.getElementById('instance-lx-gwt-frame');
   if (!(iframe instanceof HTMLIFrameElement)) {
-    console.warn('Expected element is not an iframe');
+    doWarn('Expected element is not an iframe');
     return null;
   }
   return iframe;
@@ -55,7 +56,7 @@ const getInstanceSearch = (): IndexSearch | null => {
 let priceIndex: Record<string, number | null> | null = null;
 const getHourlyPrice = async (search: IndexSearch): Promise<number | null> => {
   if (!priceIndex) {
-    const url = browser.runtime.getURL('./price-index.json');
+    const url = browser.runtime.getURL('./assets/price-index.json');
     const json = await (await fetch(url)).text();
     priceIndex = JSON.parse(json) as Record<string, number>;
   }
@@ -80,20 +81,16 @@ const getDerefContainer = async (): Promise<HTMLIFrameElement> => {
     return existingDiv;
   }
 
-  const parentDiv = ec2Iframe?.contentDocument?.querySelector(
-    '#gwt-debug-liwReviewView > div:nth-child(4) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1)',
-  );
+  const parentDiv = ec2Iframe?.contentDocument?.querySelector('.lx-A-');
   if (!parentDiv) {
     throw new Error('Parent div not found');
   }
   const derefContainer = document.createElement('iframe');
   derefContainer.id = derefContainerId;
-  derefContainer.style.height = '64px';
-  derefContainer.style.minWidth = '500px';
+  derefContainer.style.height = '33px';
+  derefContainer.style.minWidth = '550px';
   derefContainer.style.border = '0';
-  derefContainer.style.marginTop = '1em';
-  derefContainer.style.marginBottom = '1em';
-  derefContainer.src = browser.runtime.getURL('./price.html');
+  derefContainer.src = browser.runtime.getURL('./assets/price.html');
   derefContainer.onload = () => void displayPrice();
   parentDiv.append(derefContainer);
   return derefContainer;
@@ -112,7 +109,7 @@ const displayPrice = async () => {
 
   const derefContainer = await getDerefContainer();
   if (!derefContainer.contentWindow) {
-    console.warn('Deref container has no contentWindow');
+    doWarn('Deref container has no contentWindow');
     return;
   }
 

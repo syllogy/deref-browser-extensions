@@ -5,7 +5,7 @@ import path from 'path';
 const pricingUrl =
   'https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEC2/current/index.csv';
 
-export const pricingDirPath = path.join(process.cwd(), '.pricing');
+export const pricingDirPath = path.join(process.cwd(), 'pricing-cache');
 
 const etagPath = path.join(pricingDirPath, 'current-etag');
 

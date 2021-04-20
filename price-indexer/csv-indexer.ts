@@ -133,7 +133,7 @@ const main = async () => {
     }
   }
   await fs.promises.writeFile(
-    path.join(process.cwd(), './dist/price-index.json'),
+    path.join(process.cwd(), './dist/assets/price-index.json'),
     JSON.stringify(prices, null, 2),
   );
 };

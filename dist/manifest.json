@@ -1,19 +1,12 @@
 {
   "manifest_version": 2,
-  "name": "AWS Enhancement Suite",
+  "name": "Deref — AWS Enhancement Suite",
   "version": "0.0.3",
   "content_scripts": [
     {
       "matches": ["*://*.aws.amazon.com/*"],
-      "js": ["./src/instance-price.js"]
+      "js": ["./src/index.js"]
     }
   ],
-  "web_accessible_resources": [
-    "price.html",
-    "price.css",
-    "src/iframe-script.js",
-    "price-index.json",
-    "deref-logo-nav-full.svg",
-    "Compute.svg"
-  ]
+  "web_accessible_resources": ["assets/*", "src/iframe-script.js"]
 }

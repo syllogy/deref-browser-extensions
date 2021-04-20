@@ -1,5 +1,10 @@
+@font-face {
+  font-family: 'Inter';
+  src:  url('./Inter.var.woff2') format('woff2');
+}
+
 body {
-  --outer-padding: 10px;
+  font-size: 16px;
   --deref-dark: rgb(30, 32, 35);
   color: var(--deref-dark);
   font-family: -apple-system, BlinkMacSystemFont, Inter, Segoe UI, Roboto,
@@ -9,17 +14,17 @@ body {
 }
 
 #container {
-  border: solid 2px black;
+  border: solid 1px black;
   border-radius: 0.3em;
   display: inline-flex;
   align-items: center;
-  height: 60px;
+  height: 29px;
+  overflow: clip;
 }
 
 #logo {
   min-width: 6em;
-  min-height: 2em;
-  padding: var(--outer-padding);
+  min-height: 1em;
   background-color: var(--deref-dark);
   display: flex;
   justify-content: center;
@@ -28,11 +33,11 @@ body {
 }
 
 #logo img {
-  height: 1em;
+  height: 0.9em;
 }
 
 #main {
-  padding: var(--outer-padding) 1.3em;
+  padding: 1em;
   display: flex;
 }
 
