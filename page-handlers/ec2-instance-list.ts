@@ -89,7 +89,6 @@ export const ec2InstanceList: PageHandler = {
     }
 
     const derefContainer = await getDerefContainer();
-    derefContainer.onload = () => doPageHandler(this);
     if (!derefContainer.contentWindow) {
       doWarn('Deref container has no contentWindow');
       return;
