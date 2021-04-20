@@ -12,7 +12,16 @@
    npm install
    ```
 
-3. Start the dev environment
+3. Build the extension
    ```bash
    npm run build
+   ```
+
+## Starting the dev environment
+
+1. Pull the repository and install the dependencies (see above)
+
+2. Start the dev environment
+   ```bash
+   npm run dev
    ```
