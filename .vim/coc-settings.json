@@ -1,0 +1,5 @@
+{
+  "tsserver.tsdk": "node_modules/typescript/lib",
+  "typescript.preferences.importModuleSpecifier":"non-relative",
+  "eslint.packageManager": "npm"
+}
