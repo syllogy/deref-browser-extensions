@@ -41,8 +41,6 @@ const getInstanceSearchFromReviewPage = (): IndexSearch | null => {
     ),
     tenancy: tenancyString ? mapTenancyString(tenancyString) : null,
   };
-  console.log('search is');
-  console.log(search);
 
   return isIndexSearch(search) ? search : null;
 };
