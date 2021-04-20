@@ -1,19 +1,17 @@
-# AWS Enhancement Suite by Deref
+# Deref — AWS Enhancement Suite
 
-## Building the extension
+A browser extension that enhances the AWS Console.
 
-1. Pull the repository
-   `bash git clone git@github.com:deref/deref-web-extensions.git && cd deref-web-extensions`
+## Installation
 
-2. Install the dependencies
-   `npm install`
+To install, visit the extension page for your browser of choice:
 
-3. Build the extension
-   `npm run build`
+[![Firefox](assets/firefox.png 'Firefox')](https://addons.mozilla.org/addon/deref/)
 
-## Starting the dev environment
+## Support
 
-1. Pull the repository and install the dependencies (see above)
+Try [our GitHub Discussions board](https://github.com/deref/deref-browser-extensions/discussions) or email [support@deref.io](mailto:support.deref.io).
 
-2. Start the dev environment
-   `npm run dev`
+## Contributing
+
+See the [contributing guide](./CONTRIBUTING.md) to get started.
