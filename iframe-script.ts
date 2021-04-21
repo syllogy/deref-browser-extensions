@@ -1,4 +1,4 @@
-import type { InstanceInfo } from './index';
+import type { InstanceInfo } from '~/page-handlers/common';
 import { doWarn } from './logging';
 
 const renderPrice = async ({ type, hourlyCost }: InstanceInfo) => {
