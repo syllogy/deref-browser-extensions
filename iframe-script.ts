@@ -1,4 +1,4 @@
-import type { InstanceInfo } from '~/page-handlers/common';
+import { InstanceInfo, unwrapMessageToIframe } from '~/page-handlers/common';
 import { doWarn } from './logging';
 
 const renderPrice = async ({ type, hourlyCost }: InstanceInfo) => {
@@ -19,7 +19,9 @@ const renderPrice = async ({ type, hourlyCost }: InstanceInfo) => {
   }
 };
 
-window.addEventListener(
-  'message',
-  (event) => void renderPrice(event.data as InstanceInfo),
-);
+window.addEventListener('message', (event) => {
+  const data = unwrapMessageToIframe(event.data);
+  if (data) {
+    renderPrice(data as InstanceInfo);
+  }
+});

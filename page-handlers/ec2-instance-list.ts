@@ -12,6 +12,7 @@ import {
   makeDerefContainer,
   mapTenancyString,
   PageHandler,
+  postMessageToIframe,
   urlMatchesRegex,
 } from './common';
 
@@ -40,8 +41,6 @@ const getInstanceSearch = (): IndexSearch | null => {
     instanceType: getLabelledValue('label-for-Instance type'),
     tenancy: tenancyString ? mapTenancyString(tenancyString) : null,
   };
-
-  console.log(search);
 
   return isIndexSearch(search) ? search : null;
 };
@@ -98,6 +97,6 @@ export const ec2InstanceList: PageHandler = {
       hourlyCost: hourlyPrice,
       type: instanceSearch.instanceType,
     };
-    derefContainer.contentWindow.postMessage(info, '*');
+    postMessageToIframe(derefContainer, info);
   },
 };
