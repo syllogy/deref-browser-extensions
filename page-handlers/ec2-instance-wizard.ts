@@ -12,6 +12,7 @@ import {
   makeDerefContainer,
   mapTenancyString,
   PageHandler,
+  postMessageToIframe,
   urlMatchesRegex,
 } from './common';
 
@@ -111,6 +112,6 @@ export const ec2InstanceWizard: PageHandler = {
       hourlyCost: hourlyPrice,
       type: instanceSearch.instanceType,
     };
-    derefContainer.contentWindow.postMessage(info, '*');
+    postMessageToIframe(derefContainer, info);
   },
 };

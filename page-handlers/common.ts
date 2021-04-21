@@ -1,4 +1,5 @@
 import { browser } from 'webextension-polyfill-ts';
+import { doWarn } from '~/logging';
 import {
   getIndexKey,
   IndexSearch,
@@ -76,6 +77,21 @@ export const mapTenancyString = (tenancyString: string): string | null => {
     tenancyString.toLowerCase().startsWith('shared')
   ) {
     return 'Shared';
+  }
+  return null;
+};
+
+export const postMessageToIframe = (iframe: HTMLIFrameElement, data: any) => {
+  if (!iframe.contentWindow) {
+    doWarn('IFrame has no content window');
+    return;
+  }
+  iframe.contentWindow.postMessage({ isDerefMessage: true, data }, '*');
+};
+
+export const unwrapMessageToIframe = (message: any): unknown | null => {
+  if (message.isDerefMessage) {
+    return message.data;
   }
   return null;
 };
