@@ -16,3 +16,6 @@ Try [our GitHub Discussions board](https://github.com/deref/deref-browser-extens
 ## Contributing
 
 See the [contributing guide](./CONTRIBUTING.md) to get started.
+
+## Built by
+[![Deref](dist/assets/deref-logo-nav-full.png 'Deref')](https://deref.io)
