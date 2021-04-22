@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "Deref — AWS Enhancement Suite",
   "description": "Extends the AWS Console with various convenience features and resource management tools.",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "homepage_url": "https://deref.io",
   "icons": {
     "36": "./assets/icons/deref-36.png",
