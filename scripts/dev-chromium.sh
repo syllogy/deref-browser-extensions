@@ -1,4 +1,4 @@
-#!/bin/env bash
+#!/usr/bin/env bash
 set -xeuo pipefail
 
 # This tells shellcheck to ignore the warning about the trap evaluating now
