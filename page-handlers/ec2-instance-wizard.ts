@@ -1,4 +1,5 @@
 import { doWarn } from '~/logging';
+import { postMessageToIframe } from '~/page-handlers/messages';
 import {
   IndexSearch,
   isIndexSearch,
@@ -12,7 +13,6 @@ import {
   makeDerefContainer,
   mapTenancyString,
   PageHandler,
-  postMessageToIframe,
   urlMatchesRegex,
 } from './common';
 
