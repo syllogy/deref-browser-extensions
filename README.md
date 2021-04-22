@@ -16,3 +16,11 @@ Try [our GitHub Discussions board](https://github.com/deref/deref-browser-extens
 ## Contributing
 
 See the [contributing guide](./CONTRIBUTING.md) to get started.
+
+## Screenshots
+
+[![Display cost on instance creation](./assets/screenshots/instance-wizard-review.png 'Deref')](assets/screenshots/instance-wizard-selection.png)
+[![Display cost in instance list](./assets/screenshots/instance-list.png 'Deref')](assets/screenshots/instance-list.png)
+
+## Built by
+[![Deref](dist/assets/deref-logo-nav-full.png 'Deref')](https://deref.io)
