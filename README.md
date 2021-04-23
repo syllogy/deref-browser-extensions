@@ -13,16 +13,14 @@ To install, visit the extension page for your browser of choice:
 
 - Displays EC2 instance prices in the launch wizard and instance list.
 
-Currently, this list is short, but it's going to grow!
 
-We've got lots of ideas, but we want to hear what you'd like to see. Let us
-know by leaving us a message over on [the discussion
-boards](https://github.com/deref/deref-browser-extensions/discussions), or
-find us on [Twitter](https://twitter.com/deref_inc).
+## Feature Requests, Feedback and Support
 
-## Support
+Feature Requests: [Canny](https://deref.canny.io/)
 
-Try [our GitHub Discussions board](https://github.com/deref/deref-browser-extensions/discussions) or email [support@deref.io](mailto:support.deref.io).
+Feedback: [Twitter](https://twitter.com/deref_inc)
+
+Support: [support@deref.io](mailto:support.deref.io)
 
 ## Contributing
 
