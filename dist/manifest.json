@@ -5,10 +5,14 @@
   "version": "0.0.5",
   "homepage_url": "https://deref.io",
   "icons": {
-    "36": "./assets/icons/deref-36.png",
+    "16": "./assets/icons/deref-16.png",
+    "32": "./assets/icons/deref-32.png",
     "48": "./assets/icons/deref-48.png",
-    "96": "./assets/icons/deref-96.png",
-    "128": "./assets/icons/deref-128.png"
+    "64": "./assets/icons/deref-64.png",
+    "128": "./assets/icons/deref-128.png",
+    "256": "./assets/icons/deref-256.png",
+    "512": "./assets/icons/deref-512.png",
+    "1024": "./assets/icons/deref-1024.png",
   },
   "content_scripts": [
     {
