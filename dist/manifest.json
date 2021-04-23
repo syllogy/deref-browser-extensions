@@ -12,7 +12,7 @@
     "128": "./assets/icons/deref-128.png",
     "256": "./assets/icons/deref-256.png",
     "512": "./assets/icons/deref-512.png",
-    "1024": "./assets/icons/deref-1024.png",
+    "1024": "./assets/icons/deref-1024.png"
   },
   "content_scripts": [
     {
