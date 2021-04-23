@@ -6,8 +6,12 @@ jobs:
     name: "Build extension"
     runs-on: ubuntu-latest
     container:
-      image: "Dockerfile"
+      image: "node:lts"
     steps:
-      - name: "Run the build"
-        run: 'npm run build'
+      - name: Install dependencies
+        run: 'npm install'
+      - name: Compile
+        run: 'npm run compile'
+      - name: Lint
+        run: 'npm run lint'
 
