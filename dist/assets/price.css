@@ -1,15 +1,4 @@
-@font-face {
-  font-family: 'Inter';
-  src:  url('./Inter.var.woff2') format('woff2');
-}
-
 body {
-  font-size: 16px;
-  --deref-dark: rgb(30, 32, 35);
-  color: var(--deref-dark);
-  font-family: -apple-system, BlinkMacSystemFont, Inter, Segoe UI, Roboto,
-    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  margin: 0;
   display: none;
 }
 
@@ -52,9 +41,4 @@ body {
 
 #currency {
   color: #00A508;
-}
-
-.lighter {
-  opacity: 60%;
-  font-size: 0.9em;
 }
