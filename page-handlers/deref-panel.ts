@@ -6,8 +6,11 @@ import {
   urlMatchesRegex,
 } from './common';
 import { browser } from 'webextension-polyfill-ts';
+import { DerefContext } from '~/page-handlers/messages';
 
-const getDerefContainer = async (): Promise<HTMLIFrameElement> => {
+const getDerefContainer = async (
+  context: DerefContext,
+): Promise<HTMLIFrameElement> => {
   const panelId = 'deref-panel';
   const existingPanel = document.getElementById(panelId);
   if (existingPanel) {
@@ -17,7 +20,7 @@ const getDerefContainer = async (): Promise<HTMLIFrameElement> => {
     return existingPanel;
   }
 
-  const panel = makeDerefContainer(panelId);
+  const panel = makeDerefContainer(panelId, context);
   panel.src = browser.runtime.getURL('./assets/deref-panel.html');
   panel.style.position = 'fixed';
   panel.style.top = '41px';
@@ -33,9 +36,9 @@ const getDerefContainer = async (): Promise<HTMLIFrameElement> => {
 
 export const derefPanel: PageHandler = {
   conditions: [urlMatchesRegex(/.*console.aws.amazon.com/)],
-  async handler() {
-    const derefContainer = await getDerefContainer();
-    derefContainer.onload = () => doPageHandler(this);
+  async handler(context) {
+    const derefContainer = await getDerefContainer(context);
+    derefContainer.onload = () => doPageHandler(this, context);
     if (!derefContainer.contentWindow) {
       doWarn('Deref container has no contentWindow');
       return;

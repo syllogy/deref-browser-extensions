@@ -1,8 +1,14 @@
-import type { InstanceInfo } from '~/page-handlers/common';
-import { addWindowMessageListener } from '~/page-handlers/messages';
+import {
+  addWindowMessageListener,
+  MessagePayloadOf,
+  PriceMessage,
+} from '~/page-handlers/messages';
 import { doWarn } from './logging';
 
-const renderPrice = async ({ type, hourlyCost }: InstanceInfo) => {
+const renderPrice = async ({
+  type,
+  hourlyCost,
+}: MessagePayloadOf<PriceMessage>) => {
   document.body.style.display = 'unset';
   const priceSpan = document.querySelector('#deref-monthly-cost');
   if (priceSpan) {
@@ -19,7 +25,10 @@ const renderPrice = async ({ type, hourlyCost }: InstanceInfo) => {
 };
 
 addWindowMessageListener(window, (msg) => {
-  if (msg.payload) {
-    renderPrice(msg.payload as InstanceInfo);
+  switch (msg.type) {
+    case 'price': {
+      renderPrice(msg.payload);
+      break;
+    }
   }
 });

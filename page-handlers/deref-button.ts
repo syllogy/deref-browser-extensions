@@ -1,17 +1,8 @@
 import { doWarn } from '~/logging';
-import { postMessageToIframe } from '~/page-handlers/messages';
-import {
-  IndexSearch,
-  isIndexSearch,
-  UnvalidatedIndexSearch,
-} from '~/price-indexer/index-key';
+import { DerefContext } from '~/page-handlers/messages';
 import {
   doPageHandler,
-  getHourlyPrice,
-  getRegion,
-  InstanceInfo,
   makeDerefContainer,
-  mapTenancyString,
   PageHandler,
   urlMatchesRegex,
 } from './common';
@@ -21,15 +12,15 @@ const getNavHeader = (): HTMLElement | null => {
   return document.getElementById('awsc-nav-header');
 };
 
-const getDerefContainer = async (): Promise<HTMLIFrameElement> => {
+const getDerefContainer = async (
+  context: DerefContext,
+): Promise<HTMLIFrameElement> => {
   const buttonId = 'deref-button';
   const navHeader = getNavHeader();
   if (!navHeader) {
     throw new Error('Nav header not found');
   }
-  const existingButton = navHeader.ownerDocument.getElementById(
-    buttonId
-  );
+  const existingButton = navHeader.ownerDocument.getElementById(buttonId);
   if (existingButton) {
     if (!(existingButton instanceof HTMLIFrameElement)) {
       throw new Error('Expected element is not an iframe');
@@ -37,7 +28,7 @@ const getDerefContainer = async (): Promise<HTMLIFrameElement> => {
     return existingButton;
   }
 
-  const button = makeDerefContainer(buttonId);
+  const button = makeDerefContainer(buttonId, context);
   button.src = browser.runtime.getURL('./assets/deref-button.html');
   button.style.height = '36px';
   button.style.width = '60px';
@@ -47,12 +38,10 @@ const getDerefContainer = async (): Promise<HTMLIFrameElement> => {
 };
 
 export const derefButton: PageHandler = {
-  conditions: [
-    urlMatchesRegex(/.*console.aws.amazon.com/),
-  ],
-  async handler() {
-    const derefContainer = await getDerefContainer();
-    derefContainer.onload = () => doPageHandler(this);
+  conditions: [urlMatchesRegex(/.*console.aws.amazon.com/)],
+  async handler(context) {
+    const derefContainer = await getDerefContainer(context);
+    derefContainer.onload = () => doPageHandler(this, context);
     if (!derefContainer.contentWindow) {
       doWarn('Deref container has no contentWindow');
       return;
