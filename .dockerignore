@@ -1,0 +1,4 @@
+/node_modules/
+/pricing-cache/
+/dist/src/
+/dist/web-ext-artifacts/

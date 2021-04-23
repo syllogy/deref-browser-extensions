@@ -1,0 +1,13 @@
+---
+name: ci
+on: [push, pull_request]
+jobs:
+  build_extension:
+    name: "Build extension"
+    runs-on: ubuntu-latest
+    container:
+      image: "Dockerfile"
+    steps:
+      - name: "Run the build"
+        run: 'npm run build'
+
