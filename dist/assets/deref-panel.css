@@ -16,14 +16,22 @@ body {
 #content {
   flex-grow: 1;
   padding: 10px;
+  display: flex;
+  align-items: center;
 }
 
 #authenticated-container {
   display: none;
+  width: 100%;
+}
+
+#username {
+  text-align: center;
 }
 
 #unauthenticated-container {
   display: none;
+  width: 100%;
 }
 
 #footer {

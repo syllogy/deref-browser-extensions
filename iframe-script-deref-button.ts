@@ -3,6 +3,10 @@ import {
   addWindowMessageListener,
 } from '~/page-handlers/messages';
 
+const buttonEventListener = () => {
+  postMessageFromIframe({ type: 'togglePanel', payload: undefined });
+};
+
 addWindowMessageListener(window, (message) => {
   switch (message.type) {
     case 'init': {
@@ -10,9 +14,8 @@ addWindowMessageListener(window, (message) => {
       if (!button) {
         throw new Error('Button not found');
       }
-      button.addEventListener('click', (event) => {
-        postMessageFromIframe({ type: 'togglePanel', payload: undefined });
-      });
+      button.removeEventListener('click', buttonEventListener);
+      button.addEventListener('click', buttonEventListener);
       break;
     }
   }

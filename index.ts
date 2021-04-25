@@ -3,18 +3,19 @@ import { doPageHandler } from './page-handlers/common';
 import {
   addWindowMessageListener,
   DerefContext,
+  broadcastMessageToIframes,
 } from '~/page-handlers/messages';
-import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
+import { sendExtensionMessage } from '~/extension-messages';
 
 const asyncSleep = (timeMilliseconds: number): Promise<void> =>
   new Promise((r) => setTimeout(r, timeMilliseconds));
 
 const main = async () => {
-  const auth0 = await initAuth0();
-  const user = await auth0.getUser();
-  console.log('USER', user);
+  const user = await sendExtensionMessage('init', undefined);
 
-  const derefContext: DerefContext = {};
+  let derefContext: DerefContext = {
+    user,
+  };
 
   let derefPanel: HTMLIFrameElement | null = null;
   const findDerefPanel = () => {
@@ -36,14 +37,27 @@ const main = async () => {
         break;
       }
       case 'login': {
-        console.log('LOGIN!');
+        if (derefContext.user) {
+          throw new Error('User already set');
+        }
         (async () => {
-          try {
-            await auth0.loginWithPopup({});
-          } catch (e: unknown) {
-            console.error(e);
-          }
-          console.log('LOGIN DONE WITH USER', await auth0.getUser());
+          const user = await sendExtensionMessage('login', undefined);
+          derefContext = {
+            ...derefContext,
+            user,
+          };
+          broadcastMessageToIframes({ type: 'init', payload: derefContext });
+        })();
+        break;
+      }
+      case 'logout': {
+        (async () => {
+          await sendExtensionMessage('logout', undefined);
+          derefContext = {
+            ...derefContext,
+            user: null,
+          };
+          broadcastMessageToIframes({ type: 'init', payload: derefContext });
         })();
       }
     }
@@ -55,15 +69,6 @@ const main = async () => {
     );
     await asyncSleep(1000);
   }
-};
-
-const initAuth0 = async (): Promise<Auth0Client> => {
-  return createAuth0Client({
-    domain: 'deref-extension.us.auth0.com',
-    client_id: 'Kfo7nyY4PXggtS4r3vFOiaJnAAO0A2pP',
-    redirect_uri: 'https://us-west-2.console.aws.amazon.com',
-    scope: 'email',
-  });
 };
 
 void main();

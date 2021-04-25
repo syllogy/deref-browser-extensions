@@ -69,6 +69,7 @@ export const makeDerefContainer = (
 ): HTMLIFrameElement => {
   const derefContainer = document.createElement('iframe');
   derefContainer.id = id;
+  derefContainer.className = 'deref-container';
   derefContainer.style.border = '0';
   derefContainer.addEventListener('load', (event) => {
     postMessageToIframe(derefContainer, { type: 'init', payload: context });
