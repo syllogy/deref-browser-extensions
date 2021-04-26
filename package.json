@@ -9,7 +9,6 @@
     "clean": "./scripts/clean.sh",
     "compile": "./scripts/compile.sh",
     "build": "./scripts/build.sh",
-    "build-signed": "./scripts/build-signed.sh",
     "reindex-prices": "./scripts/reindex-prices.sh"
   },
   "repository": {
