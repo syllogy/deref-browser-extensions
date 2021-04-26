@@ -13,7 +13,6 @@ To install, visit the extension page for your browser of choice:
 
 - Displays EC2 instance prices in the launch wizard and instance list.
 
-
 ## Feature Requests, Feedback and Support
 
 Feature Requests: [Canny](https://deref.canny.io/)
@@ -31,6 +30,8 @@ See the [contributing guide](./CONTRIBUTING.md) to get started.
 [![Display cost on instance creation](./assets/screenshots/instance-wizard-review.png 'Deref')](assets/screenshots/instance-wizard-selection.png)
 [![Display cost in instance list](./assets/screenshots/instance-list.png 'Deref')](assets/screenshots/instance-list.png)
 
+---
+
 ## Built by
 
-[![Deref](dist/assets/deref-logo-nav-full.png 'Deref')](https://deref.io)
+[![Deref](dist/assets/deref-long-logo-with-bg.svg 'Deref')](https://deref.io)
