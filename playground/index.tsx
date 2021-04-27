@@ -5,6 +5,7 @@ import initContentScript from '~/init-content-script';
 import mockextensionApi from '~/lib/extension-api/mockextension-api';
 import initBackgroundScript from '~/init-background-script';
 import createAuth0Client from '@auth0/auth0-spa-js';
+import '../main.css';
 
 const playgroundUrl = 'http://localhost:3000';
 
