@@ -1,5 +1,8 @@
 import { pageHandlers } from './page-handlers';
-import { doPageHandler } from './page-handlers/common';
+import {
+  doPageHandler,
+  findDerefContainerForRoute,
+} from './page-handlers/common';
 import {
   addWindowMessageListener,
   DerefContext,
@@ -17,19 +20,10 @@ const main = async () => {
     user,
   };
 
-  let derefPanel: HTMLIFrameElement | null = null;
-  const findDerefPanel = () => {
-    const panel = document.getElementById('deref-panel');
-    if (panel instanceof HTMLIFrameElement) {
-      derefPanel = panel;
-    }
-    return derefPanel;
-  };
-
   addWindowMessageListener(window, (msg) => {
     switch (msg.type) {
       case 'togglePanel': {
-        const panel = findDerefPanel();
+        const panel = findDerefContainerForRoute('panel');
         if (panel) {
           panel.style.display =
             panel.style.display === 'block' ? 'none' : 'block';
@@ -40,7 +34,7 @@ const main = async () => {
         if (derefContext.user) {
           throw new Error('User already set');
         }
-        (async () => {
+        void (async () => {
           const user = await sendExtensionMessage('login', undefined);
           derefContext = {
             ...derefContext,
@@ -51,7 +45,7 @@ const main = async () => {
         break;
       }
       case 'logout': {
-        (async () => {
+        void (async () => {
           await sendExtensionMessage('logout', undefined);
           derefContext = {
             ...derefContext,

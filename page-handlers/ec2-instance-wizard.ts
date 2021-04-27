@@ -2,8 +2,8 @@ import { doWarn } from '~/logging';
 import {
   postMessageToIframe,
   PriceMessage,
-  MessagePayloadOf,
   DerefContext,
+  DerefMessagePayloadOf,
 } from '~/page-handlers/messages';
 import {
   IndexSearch,
@@ -11,15 +11,13 @@ import {
   UnvalidatedIndexSearch,
 } from '~/price-indexer/index-key';
 import {
-  doPageHandler,
   getHourlyPrice,
   getRegion,
-  makeDerefContainer,
   mapTenancyString,
   PageHandler,
   urlMatchesRegex,
+  makeDerefContainer,
 } from './common';
-import { browser } from 'webextension-polyfill-ts';
 
 const getEc2Iframe = (): HTMLIFrameElement | null => {
   const iframe = document.getElementById('instance-lx-gwt-frame');
@@ -64,31 +62,10 @@ const getInstanceSearchFromInstanceSelectionPage = (): IndexSearch | null => {
   return isIndexSearch(search) ? search : null;
 };
 
-const getDerefContainer = async (
-  context: DerefContext,
-): Promise<HTMLIFrameElement> => {
-  const derefContainerId = 'deref-container';
+const getDerefContainer = async (context: DerefContext) => {
   const ec2Iframe = getEc2Iframe();
-  const existingDiv = ec2Iframe?.contentDocument?.getElementById(
-    derefContainerId,
-  );
-  if (existingDiv) {
-    if (!(existingDiv instanceof HTMLIFrameElement)) {
-      throw new Error('Expected element is not a div');
-    }
-    return existingDiv;
-  }
-
-  const parentDiv = ec2Iframe?.contentDocument?.querySelector('.lx-A-');
-  if (!parentDiv) {
-    throw new Error('Parent div not found');
-  }
-  const derefContainer = makeDerefContainer(derefContainerId, context);
-  derefContainer.src = browser.runtime.getURL('./assets/price.html');
-  derefContainer.style.height = '33px';
-  derefContainer.style.minWidth = '550px';
-  parentDiv.append(derefContainer);
-  return derefContainer;
+  const parent = ec2Iframe?.contentDocument?.querySelector('.lx-A-');
+  return makeDerefContainer({ routeKey: 'priceBar', context, parent });
 };
 
 export const ec2InstanceWizard: PageHandler = {
@@ -111,17 +88,14 @@ export const ec2InstanceWizard: PageHandler = {
     }
 
     const derefContainer = await getDerefContainer(context);
-    derefContainer.onload = () => doPageHandler(this, context);
-    if (!derefContainer.contentWindow) {
-      doWarn('Deref container has no contentWindow');
-      return;
+
+    if (derefContainer) {
+      const payload: DerefMessagePayloadOf<PriceMessage> = {
+        hourlyCost: hourlyPrice,
+        type: instanceSearch.instanceType,
+      };
+
+      postMessageToIframe(derefContainer, { type: 'price', payload });
     }
-
-    const payload: MessagePayloadOf<PriceMessage> = {
-      hourlyCost: hourlyPrice,
-      type: instanceSearch.instanceType,
-    };
-
-    postMessageToIframe(derefContainer, { type: 'price', payload });
   },
 };

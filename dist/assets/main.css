@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Inter';
-  src:  url('./Inter.var.woff2') format('woff2');
+  src: url('./Inter.var.woff2') format('woff2');
 }
 
 body {
@@ -30,4 +30,96 @@ body {
   color: white;
   border: 1px solid #888888;
   cursor: pointer;
+}
+
+body {
+  font-size: 12px;
+}
+
+.deref-panel {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  height: 100%;
+  background-color: #ffffff;
+  border-left: 1px solid #888888;
+  border-bottom: 1px solid #888888;
+}
+
+.deref-panel .content {
+  flex-grow: 1;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.deref-panel .username {
+  text-align: center;
+}
+
+.deref-panel .footer {
+  padding: 10px;
+  text-align: right;
+}
+
+.deref-button {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+}
+
+.deref-button .deref-btn {
+  margin: 4px 0 4px 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--deref-dark);
+  color: white;
+  border: 1px solid #888888;
+  cursor: pointer;
+}
+
+.price-bar {
+  border: solid 1px black;
+  border-radius: 0.3em;
+  display: inline-flex;
+  align-items: center;
+  height: 29px;
+  overflow: clip;
+  background-color: white;
+}
+
+.price-bar .logo {
+  min-width: 6em;
+  min-height: 1em;
+  background-color: var(--deref-dark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: stretch;
+}
+
+.price-bar .logo img {
+  height: 0.9em;
+}
+
+.price-bar .main {
+  padding: 1em;
+  display: flex;
+}
+
+.price-bar .main img {
+  width: 20px;
+}
+
+.price-bar .main p {
+  margin: 1em;
+}
+
+.price-bar .currency {
+  color: #00A508;
 }

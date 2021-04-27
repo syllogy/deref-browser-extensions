@@ -13,10 +13,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": true,
+    "jsx": "preserve",
     "baseUrl": ".",
     "paths": {
       "~/*": ["./*"]
     }
   },
+  "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }
