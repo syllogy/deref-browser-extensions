@@ -15,6 +15,7 @@ import {
   PageHandler,
   urlMatchesRegex,
 } from './common';
+import { browser } from 'webextension-polyfill-ts';
 
 const getEc2Iframe = (): HTMLIFrameElement | null => {
   const iframe = document.getElementById('compute-react-frame');
@@ -65,6 +66,7 @@ const getDerefContainer = async (): Promise<HTMLIFrameElement> => {
     throw new Error('Parent div not found');
   }
   const derefContainer = makeDerefContainer(derefContainerId);
+  derefContainer.src = browser.runtime.getURL('./assets/price.html');
   derefContainer.style.height = '33px';
   derefContainer.style.minWidth = '550px';
   derefContainer.style.display = 'block';
@@ -97,6 +99,6 @@ export const ec2InstanceList: PageHandler = {
       hourlyCost: hourlyPrice,
       type: instanceSearch.instanceType,
     };
-    postMessageToIframe(derefContainer, info);
+    postMessageToIframe(derefContainer, 'price', info);
   },
 };

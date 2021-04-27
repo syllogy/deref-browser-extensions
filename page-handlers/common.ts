@@ -63,7 +63,6 @@ export const makeDerefContainer = (id: string): HTMLIFrameElement => {
   const derefContainer = document.createElement('iframe');
   derefContainer.id = id;
   derefContainer.style.border = '0';
-  derefContainer.src = browser.runtime.getURL('./assets/price.html');
   return derefContainer;
 };
 

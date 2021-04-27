@@ -1,0 +1,14 @@
+body {
+  font-size: 12px;
+}
+
+#container {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background-color: #ffffff;
+  border-left: 1px solid #888888;
+  border-bottom: 1px solid #888888;
+}

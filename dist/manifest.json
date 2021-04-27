@@ -20,5 +20,5 @@
       "js": ["./src/index.js"]
     }
   ],
-  "web_accessible_resources": ["assets/*", "src/iframe-script.js"]
+  "web_accessible_resources": ["assets/*", "src/iframe-script.js", "src/iframe-script-deref-button.js", "src/iframe-script-deref-panel.js"]
 }
