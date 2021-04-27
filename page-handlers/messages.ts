@@ -28,7 +28,7 @@ export const addWindowMessageListener = (
 };
 
 interface DerefMessage {
-  isDerefMessage: boolean;
+  isDerefMessage: true;
   type: string;
   payload: unknown;
 }
@@ -38,5 +38,5 @@ const makeDerefMessage = (type: string, payload: unknown): DerefMessage => {
 };
 
 export const isDerefMessage = (msg: unknown): msg is DerefMessage => {
-  return !!(msg as any)?.isDerefMessage;
+  return !!(msg as DerefMessage)?.isDerefMessage;
 };
