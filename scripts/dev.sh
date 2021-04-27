@@ -7,6 +7,6 @@ set -xeuo pipefail
 trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
 (cd dist && web-ext run --verbose) &
-esbuild --bundle --target=chrome58,firefox57 --outdir='./dist/src' ./*.ts ./*.tsx --watch &
+esbuild --bundle --target=es2018 --outdir='./dist/src' ./*.ts ./*.tsx --watch &
 
 wait
