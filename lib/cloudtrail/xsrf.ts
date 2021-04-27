@@ -1,6 +1,47 @@
 import { doWarn } from '~/logging';
 import { getRegionCode } from '~/page-handlers/common';
 
+const getXsrfToken = async () => {
+  const url = new URL(document.URL);
+  url.href = '/cloudtrail/home';
+  url.search = '';
+  const iframe = document.createElement('iframe');
+  iframe.src = url.toString();
+  try {
+    document.body.append(iframe);
+    await new Promise<void>((resolve) => {
+      iframe.onload = () => void resolve();
+    });
+    const iframeDocument = iframe.contentDocument;
+    if (!iframeDocument) {
+      doWarn('Could not access iframe document');
+      return null;
+    }
+    const preloadElement = iframeDocument.getElementById('preload');
+    if (!preloadElement) {
+      doWarn('No preloadElement found');
+      return null;
+    }
+    const val = preloadElement.getAttribute('data-xsrf-token');
+    if (!val) {
+      doWarn('No XSRF attribute found');
+      return null;
+    }
+
+    const { token }: { token: string | undefined } = JSON.parse(val);
+    if (!token) {
+      doWarn('No token in XSRF attribute');
+      return null;
+    }
+    return token;
+  } finally {
+    iframe.remove();
+  }
+};
+
+// Singleton token state.
+let cloudTrailXsrfToken: string | null = null;
+
 // Fetch a CloudTrail console page's HTML and extract the XSRF token from it.
 const fetchToken = async (): Promise<string | null> => {
   console.log('fetch a token');
@@ -38,8 +79,6 @@ const fetchToken = async (): Promise<string | null> => {
     return null;
   }
 
-  console.log('val', val);
-
   const { token }: { token: string | undefined } = JSON.parse(val);
   if (!token) {
     doWarn('No token in XSRF attribute');
@@ -48,58 +87,9 @@ const fetchToken = async (): Promise<string | null> => {
   return token;
 };
 
-// Singleton token state.
-let token: string | null = null;
-let isRefreshing: boolean;
-
-// Starts a token fetch if necessary, and then blocks until the current token
-// fetch completes.
-const refresh = async () => {
-  if (isRefreshing) {
-    return isRefreshing;
+export const getCloudTrailXsrfToken = async (forceRefresh = false) => {
+  if (!cloudTrailXsrfToken || forceRefresh) {
+    cloudTrailXsrfToken = await getXsrfToken();
   }
-  try {
-    isRefreshing = true;
-    token = await fetchToken();
-  } finally {
-    isRefreshing = false;
-  }
-};
-
-// Synchronization state for simultaneous token gets.
-type Callback = (token: string | null) => void;
-let callbacks: Callback[] = [];
-
-const wake = async () => {
-  if (token === null) {
-    await refresh();
-  }
-  const captured = callbacks;
-  callbacks = [];
-  for (const callback of captured) {
-    callback(token);
-  }
-};
-
-// Gets the current token. If not initially available, awaits a refreshed token.
-export const getBlocking = () =>
-  new Promise<string | null>((accept) => {
-    callbacks.push(accept);
-    void wake();
-  });
-
-// Gets the current token, if it is already available. Has side-effect of
-// triggering a refresh, so subsequent calls may succeed.
-export const getReady = () => {
-  void getBlocking();
-  return token;
-};
-
-// Clears the current token and triggers a refresh.
-export const reset = (): void => {
-  token = null;
-  if (isRefreshing) {
-    isRefreshing = false;
-  }
-  void wake();
+  return cloudTrailXsrfToken;
 };
