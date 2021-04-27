@@ -1,6 +1,6 @@
 import React from 'react';
 import { RouteComponentBaseProps } from '~/components/routes';
-import { postMessageFromIframe } from '~/page-handlers/messages';
+import { postDerefMessage } from '~/page-handlers/messages';
 
 interface Props extends RouteComponentBaseProps {}
 
@@ -14,7 +14,7 @@ export default function DerefPanel(props: Props) {
             <div
               className="btn logout-button"
               onClick={() => {
-                postMessageFromIframe({ type: 'logout', payload: undefined });
+                postDerefMessage({ type: 'logout', payload: undefined });
               }}
             >
               Logout
@@ -25,7 +25,7 @@ export default function DerefPanel(props: Props) {
             <div
               className="btn login-button"
               onClick={() => {
-                postMessageFromIframe({ type: 'login', payload: undefined });
+                postDerefMessage({ type: 'login', payload: undefined });
               }}
             >
               Login

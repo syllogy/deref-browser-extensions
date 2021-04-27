@@ -69,3 +69,5 @@ addWindowMessageListener(window, (msg) => {
     renderRoute(route, props);
   }
 });
+
+export const iframeIndex = null;

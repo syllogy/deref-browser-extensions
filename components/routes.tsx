@@ -72,6 +72,10 @@ const routes = {
 
 export type RouteKey = keyof typeof routes;
 
+export const getRouteKeys = () => {
+  return Object.keys(routes) as (keyof typeof routes)[];
+};
+
 export const getRoute = (key: RouteKey) => {
   return routes[key];
 };
@@ -83,5 +87,3 @@ export const getRouteMaybe = (key: string) => {
   }
   return routes[key as RouteKey];
 };
-
-export default routes;

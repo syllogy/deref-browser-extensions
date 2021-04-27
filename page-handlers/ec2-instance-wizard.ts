@@ -16,7 +16,7 @@ import {
   mapTenancyString,
   PageHandler,
   urlMatchesRegex,
-  makeDerefContainer,
+  makeDerefExtensionContainer,
 } from './common';
 
 const getEc2Iframe = (): HTMLIFrameElement | null => {
@@ -65,7 +65,7 @@ const getInstanceSearchFromInstanceSelectionPage = (): IndexSearch | null => {
 const getDerefContainer = async (context: DerefContext) => {
   const ec2Iframe = getEc2Iframe();
   const parent = ec2Iframe?.contentDocument?.querySelector('.lx-A-');
-  return makeDerefContainer({ routeKey: 'priceBar', context, parent });
+  return makeDerefExtensionContainer({ routeKey: 'priceBar', context, parent });
 };
 
 export const ec2InstanceWizard: PageHandler = {

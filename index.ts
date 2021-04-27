@@ -1,60 +1,14 @@
 import { pageHandlers } from './page-handlers';
-import {
-  doPageHandler,
-  findDerefContainerForRoute,
-} from './page-handlers/common';
-import {
-  addWindowMessageListener,
-  DerefContext,
-  broadcastMessageToIframes,
-} from '~/page-handlers/messages';
-import { sendExtensionMessage } from '~/extension-messages';
+import { doPageHandler } from './page-handlers/common';
+import initContentScript from '~/init-content-script';
+import webextensionApi from '~/lib/extension-api/webextension-api';
 
 const asyncSleep = (timeMilliseconds: number): Promise<void> =>
   new Promise((r) => setTimeout(r, timeMilliseconds));
 
 const main = async () => {
-  const user = await sendExtensionMessage('init', undefined);
-
-  let derefContext: DerefContext = {
-    user,
-  };
-
-  addWindowMessageListener(window, (msg) => {
-    switch (msg.type) {
-      case 'togglePanel': {
-        const panel = findDerefContainerForRoute('panel');
-        if (panel) {
-          panel.style.display =
-            panel.style.display === 'block' ? 'none' : 'block';
-        }
-        break;
-      }
-      case 'login': {
-        if (derefContext.user) {
-          throw new Error('User already set');
-        }
-        void (async () => {
-          const user = await sendExtensionMessage('login', undefined);
-          derefContext = {
-            ...derefContext,
-            user,
-          };
-          broadcastMessageToIframes({ type: 'init', payload: derefContext });
-        })();
-        break;
-      }
-      case 'logout': {
-        void (async () => {
-          await sendExtensionMessage('logout', undefined);
-          derefContext = {
-            ...derefContext,
-            user: null,
-          };
-          broadcastMessageToIframes({ type: 'init', payload: derefContext });
-        })();
-      }
-    }
+  let derefContext = await initContentScript(webextensionApi, (context) => {
+    derefContext = context;
   });
 
   while (true) {
