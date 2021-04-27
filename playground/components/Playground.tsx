@@ -3,10 +3,10 @@ import Iframe from '~/playground/components/Iframe';
 import { getRouteKeys } from '~/components/routes';
 import MessagePoster from '~/playground/components/MessagePoster';
 
-export default function App() {
+export default function Playground() {
   return (
     <div>
-      <h1>App</h1>
+      <h1>Playground</h1>
 
       <div style={{ display: 'flex', alignItems: 'stretch' }}>
         <div style={{ borderRight: '1px solid gray', width: 200 }}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from '~/playground/components/App';
+import Playground from '~/playground/components/Playground';
 import initContentScript from '~/init-content-script';
 import mockextensionApi from '~/lib/extension-api/mockextension-api';
 import initBackgroundScript from '~/init-background-script';
@@ -41,7 +41,7 @@ initBackgroundScript({
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Playground />
   </React.StrictMode>,
   document.getElementById('root'),
 );
