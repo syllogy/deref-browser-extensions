@@ -1,6 +1,6 @@
 import { doWarn } from '~/logging';
-import { AuthenticatedUser } from '~/extension-messages';
-import { findDerefContainers } from '~/page-handlers/common';
+import { findDerefContainers } from '~/page-handlers/utils';
+import { AuthenticatedUser } from '~/lib/extension-api/messages';
 
 export interface DerefContext {
   user: AuthenticatedUser | null;
@@ -65,14 +65,18 @@ export const postMessageToIframe = (
   iframe.contentWindow.postMessage(makeDerefMessage(msg), '*');
 };
 
+export const postDerefMessage = (msg: DerefMessage) => {
+  if (window.parent) {
+    window.parent.postMessage(makeDerefMessage(msg), '*');
+  } else {
+    window.postMessage(msg, '*');
+  }
+};
+
 export const broadcastMessageToIframes = (msg: DerefMessage) => {
   findDerefContainers(document).forEach((iframe) =>
     postMessageToIframe(iframe, msg),
   );
-};
-
-export const postMessageFromIframe = (msg: DerefMessage) => {
-  window.parent.postMessage(makeDerefMessage(msg), '*');
 };
 
 export const addWindowMessageListener = (

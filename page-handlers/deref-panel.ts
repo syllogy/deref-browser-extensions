@@ -1,9 +1,13 @@
-import { PageHandler, urlMatchesRegex, makeDerefContainer } from './common';
+import {
+  PageHandler,
+  urlMatchesRegex,
+  makeDerefExtensionContainer,
+} from './common';
 
 export const derefPanel: PageHandler = {
   conditions: [urlMatchesRegex(/.*console.aws.amazon.com/)],
   async handler(context) {
-    void makeDerefContainer({
+    void makeDerefExtensionContainer({
       routeKey: 'panel',
       context,
       parent: document.body,
