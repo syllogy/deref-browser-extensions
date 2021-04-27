@@ -18,6 +18,7 @@
   "author": "",
   "homepage": "https://github.com/deref/wext#readme",
   "dependencies": {
+    "@auth0/auth0-spa-js": "^1.14.0",
     "csv-parse": "^4.15.4",
     "node-fetch": "^2.6.1",
     "webextension-polyfill-ts": "^0.25.0"

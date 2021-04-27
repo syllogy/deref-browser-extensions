@@ -5,10 +5,36 @@ body {
 #container {
   box-sizing: border-box;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
   height: 100%;
   background-color: #ffffff;
   border-left: 1px solid #888888;
   border-bottom: 1px solid #888888;
+}
+
+#content {
+  flex-grow: 1;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+#authenticated-container {
+  display: none;
+  width: 100%;
+}
+
+#username {
+  text-align: center;
+}
+
+#unauthenticated-container {
+  display: none;
+  width: 100%;
+}
+
+#footer {
+  padding: 10px;
+  text-align: right;
 }

@@ -4,6 +4,7 @@ import {
   IndexSearch,
   regionNameMap,
 } from '~/price-indexer/index-key';
+import { postMessageToIframe, DerefContext } from '~/page-handlers/messages';
 
 export interface InstanceInfo {
   type: string;
@@ -23,15 +24,18 @@ export const urlMatchesRegex = (url: RegExp): ConditionFn => {
 
 export interface PageHandler {
   conditions: ConditionFn[];
-  handler: () => Promise<void> | void;
+  handler: (context: DerefContext) => Promise<void> | void;
 }
 
 export const conditionsAreMet = (conditions: ConditionFn[]): boolean =>
   conditions.every((c) => c({ url: document.URL }));
 
-export const doPageHandler = async ({ conditions, handler }: PageHandler) => {
+export const doPageHandler = async (
+  { conditions, handler }: PageHandler,
+  context: DerefContext,
+) => {
   if (conditionsAreMet(conditions)) {
-    await handler();
+    await handler(context);
   }
 };
 
@@ -59,10 +63,17 @@ export const getHourlyPrice = async (
   return priceIndex[getIndexKey(search)];
 };
 
-export const makeDerefContainer = (id: string): HTMLIFrameElement => {
+export const makeDerefContainer = (
+  id: string,
+  context: DerefContext,
+): HTMLIFrameElement => {
   const derefContainer = document.createElement('iframe');
   derefContainer.id = id;
+  derefContainer.className = 'deref-container';
   derefContainer.style.border = '0';
+  derefContainer.addEventListener('load', (event) => {
+    postMessageToIframe(derefContainer, { type: 'init', payload: context });
+  });
   return derefContainer;
 };
 

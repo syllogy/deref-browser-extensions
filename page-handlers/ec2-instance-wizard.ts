@@ -1,5 +1,10 @@
 import { doWarn } from '~/logging';
-import { postMessageToIframe } from '~/page-handlers/messages';
+import {
+  postMessageToIframe,
+  PriceMessage,
+  MessagePayloadOf,
+  DerefContext,
+} from '~/page-handlers/messages';
 import {
   IndexSearch,
   isIndexSearch,
@@ -9,7 +14,6 @@ import {
   doPageHandler,
   getHourlyPrice,
   getRegion,
-  InstanceInfo,
   makeDerefContainer,
   mapTenancyString,
   PageHandler,
@@ -60,7 +64,9 @@ const getInstanceSearchFromInstanceSelectionPage = (): IndexSearch | null => {
   return isIndexSearch(search) ? search : null;
 };
 
-const getDerefContainer = async (): Promise<HTMLIFrameElement> => {
+const getDerefContainer = async (
+  context: DerefContext,
+): Promise<HTMLIFrameElement> => {
   const derefContainerId = 'deref-container';
   const ec2Iframe = getEc2Iframe();
   const existingDiv = ec2Iframe?.contentDocument?.getElementById(
@@ -77,7 +83,7 @@ const getDerefContainer = async (): Promise<HTMLIFrameElement> => {
   if (!parentDiv) {
     throw new Error('Parent div not found');
   }
-  const derefContainer = makeDerefContainer(derefContainerId);
+  const derefContainer = makeDerefContainer(derefContainerId, context);
   derefContainer.src = browser.runtime.getURL('./assets/price.html');
   derefContainer.style.height = '33px';
   derefContainer.style.minWidth = '550px';
@@ -91,7 +97,7 @@ export const ec2InstanceWizard: PageHandler = {
       /.*console.aws.amazon.com\/ec2\/v2\/home?.*#LaunchInstanceWizard:/,
     ),
   ],
-  async handler() {
+  async handler(context) {
     const instanceSearch =
       getInstanceSearchFromReviewPage() ??
       getInstanceSearchFromInstanceSelectionPage();
@@ -104,16 +110,18 @@ export const ec2InstanceWizard: PageHandler = {
       return;
     }
 
-    const derefContainer = await getDerefContainer();
-    derefContainer.onload = () => doPageHandler(this);
+    const derefContainer = await getDerefContainer(context);
+    derefContainer.onload = () => doPageHandler(this, context);
     if (!derefContainer.contentWindow) {
       doWarn('Deref container has no contentWindow');
       return;
     }
-    const info: InstanceInfo = {
+
+    const payload: MessagePayloadOf<PriceMessage> = {
       hourlyCost: hourlyPrice,
       type: instanceSearch.instanceType,
     };
-    postMessageToIframe(derefContainer, 'price', info);
+
+    postMessageToIframe(derefContainer, { type: 'price', payload });
   },
 };

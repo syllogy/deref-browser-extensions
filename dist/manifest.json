@@ -20,5 +20,20 @@
       "js": ["./src/index.js"]
     }
   ],
-  "web_accessible_resources": ["assets/*", "src/iframe-script.js", "src/iframe-script-deref-button.js", "src/iframe-script-deref-panel.js"]
+  "background": {
+    "scripts": [
+      "./src/background.js"
+    ]
+  },
+  "web_accessible_resources": ["assets/*", "src/iframe-script.js", "src/iframe-script-deref-button.js", "src/iframe-script-deref-panel.js"],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "awsenhancementsuite@deref.io"
+    }
+  },
+  "permissions": [
+    "identity",
+    "https://*.auth0.com/",
+    "https://*.deref.io/"
+  ]
 }
