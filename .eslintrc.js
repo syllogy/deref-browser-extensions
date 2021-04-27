@@ -7,6 +7,7 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'prettier',
+    'plugin:react/recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:eslint-comments/recommended',
 
@@ -15,7 +16,7 @@ module.exports = {
     'plugin:import/errors',
     'plugin:import/warnings',
   ],
-  ignorePatterns: ['node_modules'],
+  ignorePatterns: ['node_modules', '.eslintrc.js'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: ['./tsconfig.json'],
@@ -25,8 +26,18 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint', 'import'],
+  plugins: ['react', 'react-hooks', '@typescript-eslint', 'import'],
   settings: {
+    react: {
+      version: 'latest',
+    },
+    'import/resolver': {
+      typescript: {
+        project: ['tsconfig.json'],
+      },
+    },
+  },
+  rules: {
     'no-restricted-globals': ['error', 'name'],
 
     'import/no-internal-modules': ['error', { allow: ['!(@deref)'] }],
@@ -111,6 +122,11 @@ module.exports = {
     {
       files: ['*.js'],
       rules: {
+        'react/react-in-jsx-scope': 'error', // We don't want automatic import magic.
+        'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks
+        'react-hooks/exhaustive-deps': 'warn', // Checks effect dependencies
+        'react/prop-types': 'off', // Rely on TypeScript.
+
         // Since all application code should be TypeScript, assume that any
         // *.js file isn't because it's used during process startup or
         // tooling configuration in some way. As such, it's not subject to
