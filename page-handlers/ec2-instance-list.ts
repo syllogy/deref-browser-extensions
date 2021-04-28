@@ -1,3 +1,5 @@
+import { getCloudTrailEvents } from '~/lib/cloudtrail/client';
+import { getCloudTrailXsrfToken } from '~/lib/cloudtrail/xsrf';
 import { doWarn } from '~/logging';
 import {
   postMessageToIframe,
@@ -21,6 +23,9 @@ import {
 
 const getEc2Iframe = (): HTMLIFrameElement | null => {
   const iframe = document.getElementById('compute-react-frame');
+  if (!iframe) {
+    return null;
+  }
   if (!(iframe instanceof HTMLIFrameElement)) {
     doWarn('Expected element is not an iframe');
     return null;
@@ -71,12 +76,41 @@ export const ec2InstanceList: PageHandler = {
       return;
     }
 
+    const instanceId = getLabelledValue('label-for-Instance ID')
+      ?.split(/\s+/)
+      .pop()
+      ?.trim();
+    if (!instanceId) {
+      doWarn('No instance ID found');
+      return;
+    }
+
+    const xsrfToken = await getCloudTrailXsrfToken();
+    if (!xsrfToken) {
+      doWarn('Cloudtrail XSRF token not found');
+      return;
+    }
+    const region = getRegion();
+    let lastUpdatedAt: null | Date = null;
+    for await (const event of getCloudTrailEvents({
+      region,
+      lookupField: 'ResourceName',
+      lookupValue: instanceId,
+      xsrfToken,
+    })) {
+      lastUpdatedAt =
+        !lastUpdatedAt || lastUpdatedAt.getTime() < event.eventTime
+          ? new Date(event.eventTime)
+          : lastUpdatedAt;
+    }
+
     const derefContainer = await getDerefContainer(context);
 
     if (derefContainer) {
       const payload: DerefMessagePayloadOf<PriceMessage> = {
         hourlyCost: hourlyPrice,
         type: instanceSearch.instanceType,
+        lastUpdatedAt,
       };
 
       postMessageToIframe(derefContainer, { type: 'price', payload });

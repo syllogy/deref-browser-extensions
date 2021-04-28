@@ -29,6 +29,9 @@ export default function PriceBar(props: Props) {
           </span>
           <span className="lighter">monthly</span>
         </p>
+        {props.price.lastUpdatedAt && (
+          <p>{props.price.lastUpdatedAt.toISOString()}</p>
+        )}
       </div>
     </div>
   );
