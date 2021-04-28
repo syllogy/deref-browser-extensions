@@ -1,6 +1,7 @@
 import { ExtensionApi } from '~/lib/extension-api/api';
 import { Auth0Client, User } from '@auth0/auth0-spa-js';
 import { AuthenticatedUser } from '~/lib/extension-api/messages';
+import { arnToUrl } from '~/lib/navigation';
 
 interface InitBackgroundScriptConfig {
   extensionApi: ExtensionApi;
@@ -40,6 +41,28 @@ const initBackgroundScript = ({
   extensionApi.addListener('logout', async (payload) => {
     const auth0 = await getAuth0();
     await config.logout(auth0);
+  });
+
+  extensionApi.omnibox.setDefaultSuggestion({
+    description: 'Enter an ARN',
+  });
+
+  extensionApi.omnibox.onInputEntered.addListener((text, disposition) => {
+    if (!text.startsWith('arn:')) {
+      return;
+    }
+    const url = arnToUrl(text);
+    switch (disposition) {
+      case 'currentTab':
+        extensionApi.tabs.update({ url });
+        break;
+      case 'newForegroundTab':
+        extensionApi.tabs.create({ url });
+        break;
+      case 'newBackgroundTab':
+        extensionApi.tabs.create({ url, active: false });
+        break;
+    }
   });
 };
 
