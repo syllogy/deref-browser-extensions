@@ -1,13 +1,13 @@
 import { PageHandler } from '~/page-handlers/common';
-import * as cloudTrailToken from 'lib/cloudtrail/xsrf';
 import { doWarn } from '~/logging';
 import { getCloudTrailEvents } from '~/lib/cloudtrail/client';
+import { getCloudTrailXsrfToken } from '~/lib/cloudtrail/xsrf';
 
 export const fiddle: PageHandler = {
   conditions: [],
   async handler() {
     console.log('doing fiddle');
-    const xsrfToken = await cloudTrailToken.getBlocking();
+    const xsrfToken = await getCloudTrailXsrfToken();
     if (!xsrfToken) {
       doWarn('Cloudtrail XSRF token not found');
       return;

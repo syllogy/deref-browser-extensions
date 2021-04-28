@@ -2,6 +2,7 @@ import { browser } from 'webextension-polyfill-ts';
 import initBackgroundScript from '~/init-background-script';
 import webextensionApi from '~/lib/extension-api/webextension-api';
 import createAuth0Client from '@auth0/auth0-spa-js';
+import { doWarn } from '~/logging';
 
 initBackgroundScript({
   extensionApi: webextensionApi,
@@ -41,3 +42,39 @@ initBackgroundScript({
     }
   },
 });
+
+// FIXME: This completely removes security for the AWS console. It needs to
+// be scoped to the specific tab and probably to a specific request.
+browser.webRequest.onHeadersReceived.addListener(
+  (info) => {
+    const headers = info.responseHeaders;
+    if (!headers) {
+      doWarn('No headers in response');
+      return info;
+    }
+
+    for (let i = headers.length - 1; i >= 0; --i) {
+      const header = headers[i].name.toLowerCase();
+      if (
+        header == 'x-frame-options' ||
+        header == 'frame-options'
+        //|| header === 'content-security-policy'
+      ) {
+        console.log('removing', header);
+        console.log('headers', headers);
+        headers.splice(i, 1); // Remove header
+      }
+    }
+    return { responseHeaders: headers };
+  },
+  { urls: ['*://*.aws.amazon.com/*'] },
+  [
+    'blocking',
+    'responseHeaders',
+    // Modern Chrome needs 'extraHeaders' to see and change this header,
+    // so the following code evaluates to 'extraHeaders' only in modern Chrome.
+    // chrome.webRequest.OnHeadersReceivedOptions.EXTRA_HEADERS,
+  ],
+);
+
+console.log('got to bottom!');
