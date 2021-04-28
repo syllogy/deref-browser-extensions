@@ -9,6 +9,7 @@
     "lint": "cd ./dist && web-ext lint",
     "clean": "./scripts/clean.sh",
     "compile": "./scripts/compile.sh",
+    "compile-css": "./scripts/compile-css.sh",
     "build": "./scripts/build.sh",
     "reindex-prices": "./scripts/reindex-prices.sh"
   },
@@ -43,6 +44,8 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-react": "^7.23.2",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "postcss": "^8.2.13",
+    "postcss-cli": "^8.3.1",
     "postcss-import": "^14.0.1",
     "postcss-nesting": "^8.0.0",
     "tailwindcss": "^2.1.2",

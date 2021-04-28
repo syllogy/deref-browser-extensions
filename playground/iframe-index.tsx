@@ -1,4 +1,5 @@
 import { iframeIndex } from '~/iframe-index';
-import '../main.css';
+import '~/styles/tailwind.css';
+import '~/styles/main.css';
 
 iframeIndex;
