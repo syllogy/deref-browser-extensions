@@ -1,6 +1,7 @@
 import { ExtensionApi } from '~/lib/extension-api/api';
 import { Auth0Client, User } from '@auth0/auth0-spa-js';
 import { AuthenticatedUser } from '~/lib/extension-api/messages';
+import { initOmnibox } from '~/lib/omnibox';
 
 interface InitBackgroundScriptConfig {
   extensionApi: ExtensionApi;
@@ -41,6 +42,8 @@ const initBackgroundScript = ({
     const auth0 = await getAuth0();
     await config.logout(auth0);
   });
+
+  initOmnibox(extensionApi);
 };
 
 export default initBackgroundScript;
