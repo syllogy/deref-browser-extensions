@@ -43,6 +43,8 @@ initBackgroundScript({
   },
 });
 
+const isFirefox = (window as any).browser && browser.runtime;
+
 // FIXME: This completely removes security for the AWS console. It needs to
 // be scoped to the specific tab and probably to a specific request.
 browser.webRequest.onHeadersReceived.addListener(
@@ -55,26 +57,17 @@ browser.webRequest.onHeadersReceived.addListener(
 
     for (let i = headers.length - 1; i >= 0; --i) {
       const header = headers[i].name.toLowerCase();
-      if (
-        header == 'x-frame-options' ||
-        header == 'frame-options'
-        //|| header === 'content-security-policy'
-      ) {
-        console.log('removing', header);
-        console.log('headers', headers);
-        headers.splice(i, 1); // Remove header
+      if (header == 'x-frame-options' || header == 'frame-options') {
+        headers.splice(i, 1); // Remove header.
       }
     }
     return { responseHeaders: headers };
   },
   { urls: ['*://*.aws.amazon.com/*'] },
-  [
-    'blocking',
-    'responseHeaders',
-    // Modern Chrome needs 'extraHeaders' to see and change this header,
-    // so the following code evaluates to 'extraHeaders' only in modern Chrome.
-    // chrome.webRequest.OnHeadersReceivedOptions.EXTRA_HEADERS,
-  ],
-);
 
-console.log('got to bottom!');
+  // Modern Chrome needs "extraHeaders" to access these headers but Firefox
+  // forbids it.
+  isFirefox
+    ? ['blocking', 'responseHeaders']
+    : ['blocking', 'responseHeaders', 'extraHeaders'],
+);

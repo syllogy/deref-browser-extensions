@@ -17,7 +17,8 @@
   "content_scripts": [
     {
       "matches": ["*://*.aws.amazon.com/*"],
-      "js": ["./src/index.js"]
+      "js": ["./src/index.js"],
+      "all_frames": true
     }
   ],
   "background": {

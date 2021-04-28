@@ -4,6 +4,7 @@ import { ec2InstanceList } from './ec2-instance-list';
 import { derefButton } from '~/page-handlers/deref-button';
 import { derefPanel } from '~/page-handlers/deref-panel';
 import { fiddle } from '~/page-handlers/fiddle';
+import { cloudTrailXsrf } from '~/page-handlers/cloudtrail-xsrf';
 
 export const pageHandlers: PageHandler[] = [
   ec2InstanceWizard,
@@ -11,4 +12,5 @@ export const pageHandlers: PageHandler[] = [
   derefButton,
   derefPanel,
   fiddle,
+  cloudTrailXsrf,
 ];

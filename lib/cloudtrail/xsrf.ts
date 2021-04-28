@@ -1,6 +1,10 @@
-import { doWarn } from '~/logging';
+import { addWindowMessageListener } from '~/page-handlers/messages';
 
 const getXsrfToken = async () => {
+  if (window.top !== window.self) {
+    return null;
+  }
+
   const url = new URL(document.URL);
   url.pathname = '/cloudtrail/home';
   url.host = 'console.aws.amazon.com';
@@ -10,33 +14,29 @@ const getXsrfToken = async () => {
   iframe.style.display = 'none';
   iframe.src = url.toString();
 
+  const tokenPromise = new Promise<string>((resolve, reject) => {
+    let isResolved = false;
+    addWindowMessageListener(window.top, (msg) => {
+      if (!isResolved && msg.type === 'token') {
+        isResolved = true;
+        resolve(msg.payload.token);
+      }
+    });
+    setTimeout(() => {
+      if (!isResolved) {
+        isResolved = true;
+        reject(new Error('Timed out waiting for xsrf token'));
+      }
+    }, 30_000);
+  });
+
   try {
     document.body.append(iframe);
     await new Promise<void>((resolve) => {
       iframe.onload = () => void resolve();
     });
-    const iframeDocument = iframe.contentDocument;
-    if (!iframeDocument) {
-      doWarn('Could not access iframe document');
-      return null;
-    }
-    const preloadElement = iframeDocument.getElementById('preload');
-    if (!preloadElement) {
-      doWarn('No preloadElement found');
-      return null;
-    }
-    const val = preloadElement.getAttribute('data-xsrf-token');
-    if (!val) {
-      doWarn('No XSRF attribute found');
-      return null;
-    }
 
-    const { token }: { token: string | undefined } = JSON.parse(val);
-    if (!token) {
-      doWarn('No token in XSRF attribute');
-      return null;
-    }
-    return token;
+    return await tokenPromise;
   } finally {
     iframe.remove();
   }

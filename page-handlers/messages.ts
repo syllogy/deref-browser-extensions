@@ -15,6 +15,10 @@ export interface InitMessage extends BaseMessage<DerefContext> {
   type: 'init';
 }
 
+export interface TokenMessage extends BaseMessage<{ token: string }> {
+  type: 'token';
+}
+
 export interface PriceMessage
   extends BaseMessage<{
     type: string;
@@ -40,13 +44,14 @@ export type DerefMessage =
   | PriceMessage
   | TogglePanelMessage
   | LoginMessage
-  | LogoutMessage;
+  | LogoutMessage
+  | TokenMessage;
 
 export type DerefMessagePayloadOf<
   TMessage extends DerefMessage
 > = TMessage extends BaseMessage<infer TPayload> ? TPayload : never;
 
-const makeDerefMessage = (msg: DerefMessage): DerefMessage => {
+export const makeDerefMessage = (msg: DerefMessage): DerefMessage => {
   return { isDerefMessage: true, ...msg };
 };
 
