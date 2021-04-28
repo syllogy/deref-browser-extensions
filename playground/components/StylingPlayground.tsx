@@ -3,17 +3,17 @@ import Bar from './temp_styling/Bar';
 import BarButton from './temp_styling/BarButton';
 
 export default function StylingPlayground() {
-  const barChildren = [
-    <BarButton size="compact">
+  const barChildren = (size: any) => [
+    <BarButton size={size}>
       <h1>Deref</h1>
     </BarButton>,
-    <BarButton size="compact">
+    <BarButton size={size}>
       <p>US $582/mo</p>
     </BarButton>,
-    <BarButton size="compact">
+    <BarButton size={size}>
       <p>Brandon recently modified</p>
     </BarButton>,
-    <BarButton size="compact">
+    <BarButton size={size}>
       <p>Create a note</p>
     </BarButton>,
   ];
@@ -28,9 +28,9 @@ export default function StylingPlayground() {
         components for general use in the extensions.
       </p>
       <h1 className="font-bold mb-4 mt-8">Compact Bar</h1>
-      <Bar size="compact">{barChildren}</Bar>
+      <Bar size="compact">{barChildren('compact')}</Bar>
       <h1 className="font-bold mb-4 mt-8">Comfortable Bar</h1>
-      <Bar size="comfortable">{barChildren}</Bar>
+      <Bar size="comfortable">{barChildren('comfortable')}</Bar>
     </div>
   );
 }
