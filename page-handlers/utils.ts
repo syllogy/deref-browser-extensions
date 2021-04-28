@@ -9,7 +9,6 @@ export interface MakeDerefContainerOptions {
   src: string;
   parent?: Element | null;
   context: DerefContext;
-  style?: Partial<CSSStyleDeclaration>;
 }
 
 const getDerefContainerId = (routeKey: RouteKey) => `deref-${routeKey}`;
@@ -19,7 +18,6 @@ export const makeDerefContainer = async ({
   src,
   parent,
   context,
-  style,
 }: MakeDerefContainerOptions): Promise<HTMLIFrameElement | null> => {
   const elementId = getDerefContainerId(routeKey);
 
@@ -41,12 +39,7 @@ export const makeDerefContainer = async ({
   derefContainer.src = `${src}?route=${routeKey}`;
 
   const route = getRoute(routeKey);
-  for (const [key, value] of Object.entries(route.style)) {
-    derefContainer.style[key as any] = value as string;
-  }
-  for (const [key, value] of Object.entries(style ?? {})) {
-    derefContainer.style[key as any] = value as string;
-  }
+  applyStyleDeclaration(derefContainer, route.style(context));
 
   parent.append(derefContainer);
 
@@ -56,6 +49,18 @@ export const makeDerefContainer = async ({
       resolve(derefContainer);
     });
   });
+};
+
+export const applyStyleDeclaration = (
+  element: HTMLElement,
+  style?: Partial<CSSStyleDeclaration>,
+) => {
+  if (!style) {
+    return;
+  }
+  for (const [key, value] of Object.entries(style)) {
+    element.style[key as any] = value as string;
+  }
 };
 
 export const findDerefContainerForRoute = (routeKey: RouteKey) => {

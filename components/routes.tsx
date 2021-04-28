@@ -1,5 +1,5 @@
 import { ComponentType } from 'react';
-import DerefPanel from '~/components/DerefPanel';
+import DerefPanel from '~/components/deref-panel/DerefPanel';
 import { doWarn } from '~/logging';
 import { DerefContext, DerefMessage } from '~/page-handlers/messages';
 import DerefButton from '~/components/DerefButton';
@@ -11,51 +11,51 @@ export interface RouteComponentBaseProps {
   derefContext: DerefContext;
 }
 
-export type RouteComponentProps<TProps> = RouteComponentBaseProps & TProps;
-
 export interface Route<TProps> {
-  component: ComponentType<RouteComponentProps<TProps>>;
-  style: Partial<CSSStyleDeclaration>;
-  messageToProps: (
-    msg: DerefMessage,
-    props: RouteComponentBaseProps & Partial<RouteComponentProps<TProps>>,
-  ) => RouteComponentProps<TProps>;
+  component: ComponentType<TProps>;
+  style: (context: DerefContext) => Partial<CSSStyleDeclaration>;
+  initialProps: (derefContext: DerefContext) => TProps;
+  messageToProps?: (msg: DerefMessage, props: TProps) => TProps | void;
 }
 
 const createRoute = <TProps,>(route: Route<TProps>) => route;
 
+export const DEREF_PANEL_SETTINGS = {
+  offsetTop: 41,
+  foldedHeight: 48,
+};
+
 const routes = {
   panel: createRoute({
     component: DerefPanel,
-    style: {
+    style: (context) => ({
       position: 'fixed',
-      top: '41px',
+      top: `${DEREF_PANEL_SETTINGS.offsetTop}px`,
       right: '0',
-      width: '200px',
-      height: '100px',
+      width: '300px',
       zIndex: '100',
-      display: 'none',
-    },
-    messageToProps: (msg, props) => {
-      return props;
-    },
+      display: context.panelState.visible ? 'block' : 'none',
+      height: context.panelState.expanded
+        ? `calc(100vh - ${DEREF_PANEL_SETTINGS.offsetTop}px)`
+        : `${DEREF_PANEL_SETTINGS.foldedHeight}px`,
+    }),
+    initialProps: (derefContext) => ({ derefContext }),
   }),
   button: createRoute({
     component: DerefButton,
-    style: {
+    style: (context) => ({
       height: '36px',
       width: '60px',
-    },
-    messageToProps: (msg, props) => {
-      return props;
-    },
+    }),
+    initialProps: (derefContext) => ({ derefContext }),
   }),
   priceBar: createRoute({
     component: PriceBar,
-    style: {
+    style: (context) => ({
       height: '33px',
       minWidth: '550px',
-    },
+    }),
+    initialProps: (derefContext) => ({ derefContext }),
     messageToProps: (msg, props) => {
       switch (msg.type) {
         case 'price': {
@@ -65,7 +65,6 @@ const routes = {
           };
         }
       }
-      return props;
     },
   }),
 };

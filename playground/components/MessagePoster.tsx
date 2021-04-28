@@ -12,7 +12,36 @@ const messages: Message[] = [
   {
     msg: () => ({
       type: 'togglePanel',
-      payload: undefined,
+      payload: {},
+    }),
+  },
+  {
+    msg: () => ({
+      type: 'togglePanelExpand',
+      payload: {},
+    }),
+  },
+  {
+    title: 'navContext:clear',
+    msg: () => ({
+      type: 'updateNavContext',
+      payload: {
+        navContext: null,
+      },
+    }),
+  },
+  {
+    title: 'navContext:ec2Instance',
+    msg: () => ({
+      type: 'updateNavContext',
+      payload: {
+        navContext: {
+          type: 'ec2Instance',
+          data: {
+            instanceId: 'instance-123456789',
+          },
+        },
+      },
     }),
   },
   {

@@ -2,8 +2,31 @@ import { doWarn } from '~/logging';
 import { findDerefContainers } from '~/page-handlers/utils';
 import { AuthenticatedUser } from '~/lib/extension-api/messages';
 
+export interface BaseNavContext<TData> {
+  data: TData;
+}
+
+export interface Ec2InstanceNavContext
+  extends BaseNavContext<{
+    instanceId: string;
+    tab?: 'tab1' | 'tab2';
+  }> {
+  type: 'ec2Instance';
+}
+
+export type NavContext = Ec2InstanceNavContext;
+
+export type NavContextType<
+  TNavContext extends NavContext
+> = TNavContext['type'];
+
 export interface DerefContext {
   user: AuthenticatedUser | null;
+  panelState: {
+    expanded: boolean;
+    visible: boolean;
+  };
+  navContext: NavContext | null;
 }
 
 export interface BaseMessage<TPayload> {
@@ -23,8 +46,25 @@ export interface PriceMessage
   type: 'price';
 }
 
-export interface TogglePanelMessage extends BaseMessage<void> {
+export interface TogglePanelMessage
+  extends BaseMessage<{
+    show?: boolean;
+  }> {
   type: 'togglePanel';
+}
+
+export interface TogglePanelExpandMessage
+  extends BaseMessage<{
+    expand?: boolean;
+  }> {
+  type: 'togglePanelExpand';
+}
+
+export interface UpdateNavContextMessage
+  extends BaseMessage<{
+    navContext: NavContext | null;
+  }> {
+  type: 'updateNavContext';
 }
 
 export interface LoginMessage extends BaseMessage<void> {
@@ -39,6 +79,8 @@ export type DerefMessage =
   | InitMessage
   | PriceMessage
   | TogglePanelMessage
+  | TogglePanelExpandMessage
+  | UpdateNavContextMessage
   | LoginMessage
   | LogoutMessage;
 
@@ -82,10 +124,15 @@ export const broadcastMessageToIframes = (msg: DerefMessage) => {
 export const addWindowMessageListener = (
   window: Window,
   handler: (msg: DerefMessage) => void,
-) => {
-  window.addEventListener('message', (event) => {
+): (() => void) => {
+  const listener = (event: MessageEvent) => {
     if (isDerefMessage(event.data)) {
       handler(event.data);
     }
-  });
+  };
+
+  window.addEventListener('message', listener);
+  return () => {
+    window.removeEventListener('message', listener);
+  };
 };

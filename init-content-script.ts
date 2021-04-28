@@ -3,20 +3,40 @@ import {
   DerefContext,
   broadcastMessageToIframes,
 } from '~/page-handlers/messages';
-import { findDerefContainerForRoute } from '~/page-handlers/utils';
+import {
+  findDerefContainerForRoute,
+  applyStyleDeclaration,
+} from '~/page-handlers/utils';
 import { ExtensionApi } from '~/lib/extension-api/api';
+import { isDefined } from '~/lib/types';
+import { getRoute } from '~/components/routes';
 
-const initContentScript = async (
-  extensionApi: ExtensionApi,
-  onContextUpdate: (context: DerefContext) => void,
-): Promise<DerefContext> => {
+interface InitContentScriptConfig {
+  extensionApi: ExtensionApi;
+  onUpdateDerefContext: (context: DerefContext) => void;
+}
+
+interface InitContentScriptResult {
+  derefContext: DerefContext;
+  updateDerefContext: (context: Partial<DerefContext>) => void;
+}
+
+const initContentScript = async ({
+  extensionApi,
+  ...config
+}: InitContentScriptConfig): Promise<InitContentScriptResult> => {
   const user = await extensionApi.sendMessage('init', undefined);
 
   let derefContext: DerefContext = {
     user,
+    panelState: {
+      expanded: false,
+      visible: true,
+    },
+    navContext: null,
   };
 
-  const updateContext = (context: Partial<DerefContext>) => {
+  const updateDerefContext = (context: Partial<DerefContext>) => {
     derefContext = {
       ...derefContext,
       ...context,
@@ -24,17 +44,45 @@ const initContentScript = async (
 
     broadcastMessageToIframes({ type: 'init', payload: derefContext });
 
-    onContextUpdate(derefContext);
+    config.onUpdateDerefContext(derefContext);
   };
 
   addWindowMessageListener(window, (msg) => {
     switch (msg.type) {
       case 'togglePanel': {
+        updateDerefContext({
+          panelState: {
+            ...derefContext.panelState,
+            visible: isDefined(msg.payload.show)
+              ? msg.payload.show
+              : !derefContext.panelState.visible,
+          },
+        });
         const panel = findDerefContainerForRoute('panel');
         if (panel) {
-          panel.style.display =
-            panel.style.display === 'block' ? 'none' : 'block';
+          applyStyleDeclaration(panel, getRoute('panel').style(derefContext));
         }
+        break;
+      }
+      case 'togglePanelExpand': {
+        updateDerefContext({
+          panelState: {
+            ...derefContext.panelState,
+            expanded: isDefined(msg.payload.expand)
+              ? msg.payload.expand
+              : !derefContext.panelState.expanded,
+          },
+        });
+        const panel = findDerefContainerForRoute('panel');
+        if (panel) {
+          applyStyleDeclaration(panel, getRoute('panel').style(derefContext));
+        }
+        break;
+      }
+      case 'updateNavContext': {
+        updateDerefContext({
+          navContext: msg.payload.navContext,
+        });
         break;
       }
       case 'login': {
@@ -43,14 +91,14 @@ const initContentScript = async (
         }
         void (async () => {
           const user = await extensionApi.sendMessage('login', undefined);
-          updateContext({ user });
+          updateDerefContext({ user });
         })();
         break;
       }
       case 'logout': {
         void (async () => {
           await extensionApi.sendMessage('logout', undefined);
-          updateContext({ user: null });
+          updateDerefContext({ user: null });
         })();
         break;
       }
@@ -61,7 +109,10 @@ const initContentScript = async (
     }
   });
 
-  return derefContext;
+  return {
+    derefContext,
+    updateDerefContext,
+  };
 };
 
 export default initContentScript;
