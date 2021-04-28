@@ -5,7 +5,7 @@ import BarButton from './temp_styling/BarButton';
 export default function StylingPlayground() {
   const barChildren = (size: any) => [
     <BarButton size={size}>
-      <h1>Deref</h1>
+      <h1 className="font-bold">-></h1>
     </BarButton>,
     <BarButton size={size}>
       <p>US $582/mo</p>

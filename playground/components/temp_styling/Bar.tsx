@@ -19,7 +19,7 @@ export default function Bar({ size, children }: BarProps) {
       style={{ height: height[size] }}
       className={`${
         size === 'comfortable' ? 'flex' : 'inline-flex'
-      } flex-nowrap items-center border border-gray-300 rounded-md shadow-md border-3d overflow-hidden select-none`}
+      } flex-nowrap items-center border border-gray-300 rounded-md shadow hover:shadow-md duration-100 border-3d overflow-hidden select-none`}
     >
       {children?.map((item, i) => {
         return (
