@@ -111,8 +111,6 @@ export const getCloudTrailEvents = async function* ({
   const validation = ResponseData.validate(data);
   if (!validation.success) {
     doWarn('Could not validate body');
-    console.log(validation);
-    console.log(data);
     return;
   }
 
