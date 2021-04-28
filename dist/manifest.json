@@ -16,31 +16,18 @@
   },
   "content_scripts": [
     {
-      "matches": [
-        "*://*.aws.amazon.com/*"
-      ],
-      "js": [
-        "./src/index.js"
-      ]
+      "matches": ["*://*.aws.amazon.com/*"],
+      "js": ["./src/index.js"]
     }
   ],
   "background": {
-    "scripts": [
-      "./src/background.js"
-    ]
+    "scripts": ["./src/background.js"]
   },
-  "web_accessible_resources": [
-    "assets/*",
-    "src/iframe-index.js"
-  ],
+  "web_accessible_resources": ["assets/*", "src/iframe-index.js"],
   "browser_specific_settings": {
     "gecko": {
       "id": "awsenhancementsuite@deref.io"
     }
   },
-  "permissions": [
-    "identity",
-    "https://*.auth0.com/",
-    "https://*.deref.io/"
-  ]
+  "permissions": ["identity", "https://*.auth0.com/", "https://*.deref.io/"]
 }
