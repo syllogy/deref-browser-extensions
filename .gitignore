@@ -1,3 +1,4 @@
 /node_modules/
 /pricing-cache/
 *.tsbuildinfo
+/dist/assets/main.css

@@ -1,8 +1,4 @@
-@font-face {
-  font-family: 'Inter';
-  src: url('./Inter.var.woff2') format('woff2');
-}
-
+/* XXX These classes are being modularized now */
 body {
   font-size: 16px;
   --deref-dark: rgb(30, 32, 35);
@@ -121,5 +117,5 @@ body {
 }
 
 .price-bar .currency {
-  color: #00A508;
+  color: #00a508;
 }
