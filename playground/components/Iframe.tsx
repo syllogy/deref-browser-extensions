@@ -1,21 +1,21 @@
 import React, { useRef, useEffect } from 'react';
 import { makeDerefContainer } from '~/page-handlers/utils';
 import { RouteKey } from '~/components/routes';
+import { DerefContext } from '~/page-handlers/messages';
 
 interface Props {
   routeKey: RouteKey;
+  derefContext: DerefContext;
 }
 
-export default function Iframe({ routeKey }: Props) {
+export default function Iframe({ routeKey, derefContext }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     void makeDerefContainer({
       routeKey,
       src: '../iframe-index.html',
-      context: {
-        user: null,
-      },
+      context: derefContext,
       parent: containerRef.current,
     });
   }, []);
