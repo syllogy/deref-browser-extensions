@@ -1,8 +1,9 @@
 import * as rt from 'runtypes';
 import { doWarn } from '~/logging';
 
-// XXX This is a first pass, no idea how accurate these types are yet.
-// See https://docs.amazonaws.cn/en_us/awscloudtrail/latest/userguide/cloudtrail-event-reference.html
+// Unhelpfully the types returned in the frontend proxy are just slightly
+// different from the official API types. So far I've just noticed difference in
+// cases of keys (e.g. eventId vs eventID).
 const CloudTrailEvent = rt.Record({
   eventId: rt.String,
   eventVersion: rt.Optional(rt.String),
