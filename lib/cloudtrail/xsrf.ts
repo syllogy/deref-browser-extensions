@@ -1,3 +1,4 @@
+import webextensionApi from '~/lib/extension-api/webextension-api';
 import { addWindowMessageListener } from '~/page-handlers/messages';
 
 const getXsrfToken = async () => {
@@ -13,6 +14,8 @@ const getXsrfToken = async () => {
   const iframe = document.createElement('iframe');
   iframe.style.display = 'none';
   iframe.src = url.toString();
+
+  await webextensionApi.sendMessage('frameOptionsException', undefined);
 
   const tokenPromise = new Promise<string>((resolve, reject) => {
     let isResolved = false;

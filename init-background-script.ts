@@ -1,6 +1,8 @@
 import { ExtensionApi } from '~/lib/extension-api/api';
 import { Auth0Client, User } from '@auth0/auth0-spa-js';
 import { AuthenticatedUser } from '~/lib/extension-api/messages';
+import { browser, WebRequest } from 'webextension-polyfill-ts';
+import { doWarn } from '~/logging';
 
 interface InitBackgroundScriptConfig {
   extensionApi: ExtensionApi;
@@ -41,6 +43,48 @@ const initBackgroundScript = ({
     const auth0 = await getAuth0();
     await config.logout(auth0);
   });
+
+  extensionApi.addListener(
+    'frameOptionsException',
+    async (_payload, context) => {
+      const tabId = context?.tabId;
+      if (!tabId) {
+        doWarn('No tab ID set');
+        return;
+      }
+
+      const isFirefox = (window as any).browser && browser.runtime;
+
+      const listener = (info: WebRequest.OnHeadersReceivedDetailsType) => {
+        const headers = info.responseHeaders;
+        if (!headers) {
+          doWarn('No headers in response');
+          return info;
+        }
+
+        for (let i = headers.length - 1; i >= 0; --i) {
+          const header = headers[i].name.toLowerCase();
+          if (header == 'x-frame-options' || header == 'frame-options') {
+            headers.splice(i, 1); // Remove header.
+          }
+        }
+        return { responseHeaders: headers };
+      };
+
+      // FIXME: This completely removes security for the AWS console. It needs to
+      // be scoped to the specific tab and probably to a specific request.
+      browser.webRequest.onHeadersReceived.addListener(
+        listener,
+        { urls: ['*://*.aws.amazon.com/*'], types: ['sub_frame'], tabId },
+
+        // Modern Chrome needs "extraHeaders" to access these headers but Firefox
+        // forbids it.
+        isFirefox
+          ? ['blocking', 'responseHeaders']
+          : ['blocking', 'responseHeaders', 'extraHeaders'],
+      );
+    },
+  );
 };
 
 export default initBackgroundScript;

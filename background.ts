@@ -2,7 +2,6 @@ import { browser } from 'webextension-polyfill-ts';
 import initBackgroundScript from '~/init-background-script';
 import webextensionApi from '~/lib/extension-api/webextension-api';
 import createAuth0Client from '@auth0/auth0-spa-js';
-import { doWarn } from '~/logging';
 
 initBackgroundScript({
   extensionApi: webextensionApi,
@@ -42,32 +41,3 @@ initBackgroundScript({
     }
   },
 });
-
-const isFirefox = (window as any).browser && browser.runtime;
-
-// FIXME: This completely removes security for the AWS console. It needs to
-// be scoped to the specific tab and probably to a specific request.
-browser.webRequest.onHeadersReceived.addListener(
-  (info) => {
-    const headers = info.responseHeaders;
-    if (!headers) {
-      doWarn('No headers in response');
-      return info;
-    }
-
-    for (let i = headers.length - 1; i >= 0; --i) {
-      const header = headers[i].name.toLowerCase();
-      if (header == 'x-frame-options' || header == 'frame-options') {
-        headers.splice(i, 1); // Remove header.
-      }
-    }
-    return { responseHeaders: headers };
-  },
-  { urls: ['*://*.aws.amazon.com/*'] },
-
-  // Modern Chrome needs "extraHeaders" to access these headers but Firefox
-  // forbids it.
-  isFirefox
-    ? ['blocking', 'responseHeaders']
-    : ['blocking', 'responseHeaders', 'extraHeaders'],
-);
