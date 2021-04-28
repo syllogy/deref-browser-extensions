@@ -2,20 +2,22 @@ import React, { ReactNode } from 'react';
 import { NavContext, postDerefMessage } from '~/page-handlers/messages';
 import classNames from 'classnames';
 
-export interface PanelHeaderMenuItem {
-  item: ReactNode;
-  renderContent?: () => ReactNode;
+export interface PanelHeaderMenuItem<TItemProps> {
+  render: (props: TItemProps) => ReactNode;
+  renderContent: (props: TItemProps) => ReactNode;
 }
 
-interface Props<TItem extends PanelHeaderMenuItem> {
+interface Props<TItemProps, TItem extends PanelHeaderMenuItem<TItemProps>> {
   items: TItem[];
+  itemProps: TItemProps;
   isItemSelected: (item: TItem) => boolean;
   getItemNavContext: (item: TItem) => NavContext;
 }
 
-export default function PanelHeaderMenu<TItem extends PanelHeaderMenuItem>(
-  props: Props<TItem>,
-) {
+export default function PanelHeaderMenu<
+  TItemProps,
+  TItem extends PanelHeaderMenuItem<TItemProps>
+>(props: Props<TItemProps, TItem>) {
   return (
     <div className="flex items-stretch">
       {props.items.map((item, i) => {
@@ -42,7 +44,7 @@ export default function PanelHeaderMenu<TItem extends PanelHeaderMenuItem>(
               });
             }}
           >
-            {item.item}
+            {item.render(props.itemProps)}
           </div>
         );
       })}
@@ -50,12 +52,15 @@ export default function PanelHeaderMenu<TItem extends PanelHeaderMenuItem>(
   );
 }
 
-export const renderPanelHeaderMenuContent = <TItem extends PanelHeaderMenuItem>(
-  props: Omit<Props<TItem>, 'getItemNavContext'>,
+export const renderPanelHeaderMenuContent = <
+  TItemProps,
+  TItem extends PanelHeaderMenuItem<TItemProps>
+>(
+  props: Omit<Props<TItemProps, TItem>, 'getItemNavContext'>,
 ) => {
   const selected = props.items.find((item) => props.isItemSelected(item));
   if (!selected) {
     return null;
   }
-  return selected.renderContent?.() ?? null;
+  return selected.renderContent(props.itemProps) ?? null;
 };

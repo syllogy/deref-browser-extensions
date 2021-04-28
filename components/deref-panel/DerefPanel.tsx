@@ -1,8 +1,5 @@
 import React, { createElement, useEffect } from 'react';
-import {
-  RouteComponentBaseProps,
-  DEREF_PANEL_SETTINGS,
-} from '~/components/routes';
+import { DEREF_PANEL_SETTINGS, RouteComponentProps } from '~/components/routes';
 import {
   NavContext,
   NavContextType,
@@ -21,8 +18,6 @@ import {
   DefaultContent,
   DefaultFooter,
 } from '~/components/deref-panel/default';
-
-interface Props extends RouteComponentBaseProps {}
 
 const contentMap: Map<
   NavContextType<NavContext>,
@@ -43,7 +38,7 @@ const defaultContent: Required<PanelContent<any>> = {
   footer: DefaultFooter,
 };
 
-export default function DerefPanel(props: Props) {
+export default function DerefPanel(props: RouteComponentProps) {
   const content = props.derefContext.navContext
     ? contentMap.get(props.derefContext.navContext.type) ?? defaultContent
     : defaultContent;

@@ -1,10 +1,8 @@
 import React from 'react';
-import { RouteComponentBaseProps } from '~/components/routes';
+import { RouteComponentProps } from '~/components/routes';
 import { postDerefMessage } from '~/page-handlers/messages';
 
-interface Props extends RouteComponentBaseProps {}
-
-export default function DerefButton(props: Props) {
+export default function DerefButton(props: RouteComponentProps) {
   return (
     <div className="deref-button">
       <div

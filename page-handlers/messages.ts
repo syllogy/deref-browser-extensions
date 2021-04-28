@@ -1,6 +1,7 @@
 import { doWarn } from '~/logging';
 import { findDerefContainers } from '~/page-handlers/utils';
 import { AuthenticatedUser } from '~/lib/extension-api/messages';
+import { useEffect, useState } from 'react';
 
 export interface BaseNavContext<TData> {
   data: TData;
@@ -9,7 +10,7 @@ export interface BaseNavContext<TData> {
 export interface Ec2InstanceNavContext
   extends BaseNavContext<{
     instanceId: string;
-    tab?: 'tab1' | 'tab2';
+    tab?: 'info' | 'price' | 'notes';
   }> {
   type: 'ec2Instance';
 }
@@ -84,9 +85,16 @@ export type DerefMessage =
   | LoginMessage
   | LogoutMessage;
 
+export type DerefMessageType<TMessage extends DerefMessage> = TMessage['type'];
+
 export type DerefMessagePayloadOf<
-  TMessage extends DerefMessage
-> = TMessage extends BaseMessage<infer TPayload> ? TPayload : never;
+  TMessage extends DerefMessage,
+  TType extends DerefMessageType<TMessage> = any
+> = TMessage extends BaseMessage<infer TPayload> & {
+  type: TType;
+}
+  ? TPayload
+  : never;
 
 const makeDerefMessage = (msg: DerefMessage): DerefMessage => {
   return { isDerefMessage: true, ...msg };
@@ -135,4 +143,25 @@ export const addWindowMessageListener = (
   return () => {
     window.removeEventListener('message', listener);
   };
+};
+
+export const useWindowMessageListener = <
+  TMessage extends DerefMessage,
+  TType extends DerefMessageType<TMessage>
+>(
+  type: TType,
+) => {
+  const [payload, setPayload] = useState<DerefMessagePayloadOf<
+    TMessage,
+    TType
+  > | null>(null);
+  useEffect(() => {
+    return addWindowMessageListener(window, (msg) => {
+      if (msg.type === type) {
+        setPayload(msg.payload as DerefMessagePayloadOf<TMessage, TType>);
+      }
+    });
+  }, []);
+
+  return payload;
 };

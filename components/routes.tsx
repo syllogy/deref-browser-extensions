@@ -1,24 +1,24 @@
 import { ComponentType } from 'react';
 import DerefPanel from '~/components/deref-panel/DerefPanel';
 import { doWarn } from '~/logging';
-import { DerefContext, DerefMessage } from '~/page-handlers/messages';
+import { DerefContext } from '~/page-handlers/messages';
 import DerefButton from '~/components/DerefButton';
 import PriceBar from '~/components/PriceBar';
 
 // TODO: Add a proper router.
 
-export interface RouteComponentBaseProps {
+export interface RouteComponentProps {
   derefContext: DerefContext;
 }
 
-export interface Route<TProps> {
-  component: ComponentType<TProps>;
+export type RouteComponent = ComponentType<RouteComponentProps>;
+
+export interface Route {
+  component: RouteComponent;
   style: (context: DerefContext) => Partial<CSSStyleDeclaration>;
-  initialProps: (derefContext: DerefContext) => TProps;
-  messageToProps?: (msg: DerefMessage, props: TProps) => TProps | void;
 }
 
-const createRoute = <TProps,>(route: Route<TProps>) => route;
+const createRoute = (route: Route) => route;
 
 export const DEREF_PANEL_SETTINGS = {
   offsetTop: 41,
@@ -39,7 +39,6 @@ const routes = {
         ? `calc(100vh - ${DEREF_PANEL_SETTINGS.offsetTop}px)`
         : `${DEREF_PANEL_SETTINGS.foldedHeight}px`,
     }),
-    initialProps: (derefContext) => ({ derefContext }),
   }),
   button: createRoute({
     component: DerefButton,
@@ -47,7 +46,6 @@ const routes = {
       height: '36px',
       width: '60px',
     }),
-    initialProps: (derefContext) => ({ derefContext }),
   }),
   priceBar: createRoute({
     component: PriceBar,
@@ -55,17 +53,6 @@ const routes = {
       height: '33px',
       minWidth: '550px',
     }),
-    initialProps: (derefContext) => ({ derefContext }),
-    messageToProps: (msg, props) => {
-      switch (msg.type) {
-        case 'price': {
-          return {
-            ...props,
-            price: msg.payload,
-          };
-        }
-      }
-    },
   }),
 };
 

@@ -1,9 +1,9 @@
-import { RouteComponentBaseProps } from '~/components/routes';
+import { RouteComponentProps } from '~/components/routes';
 import { ComponentType } from 'react';
 import { NavContext } from '~/page-handlers/messages';
 
 export interface PanelComponentProps<TNavContext extends NavContext>
-  extends RouteComponentBaseProps {
+  extends RouteComponentProps {
   navContext: TNavContext;
 }
 
