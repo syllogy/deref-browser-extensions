@@ -1,13 +1,19 @@
 import React from 'react';
-import { RouteComponentBaseProps } from '~/components/routes';
-import { DerefMessagePayloadOf, PriceMessage } from '~/page-handlers/messages';
+import { RouteComponentProps } from '~/components/routes';
+import {
+  useWindowMessageListener,
+  PriceMessage,
+  DerefMessagePayloadOf,
+} from '~/page-handlers/messages';
 
-interface Props extends RouteComponentBaseProps {
+interface Props extends RouteComponentProps {
   price?: DerefMessagePayloadOf<PriceMessage>;
 }
 
 export default function PriceBar(props: Props) {
-  if (!props.price) {
+  const price = props.price ?? useWindowMessageListener('price');
+
+  if (!price) {
     return null;
   }
 
@@ -19,13 +25,13 @@ export default function PriceBar(props: Props) {
       <div className="main">
         <img src="./Compute.svg" />
         <p>
-          <span className="instance-type">{props.price.type}</span>
+          <span className="instance-type">{price.type}</span>
           <span className="lighter">instance</span>
         </p>
         <p>
           <span className="currency">US$</span>
           <span className="deref-monthly-cost">
-            {(props.price.hourlyCost * 730).toFixed(2)}
+            {(price.hourlyCost * 730).toFixed(2)}
           </span>
           <span className="lighter">monthly</span>
         </p>

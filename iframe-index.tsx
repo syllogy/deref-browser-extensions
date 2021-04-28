@@ -1,9 +1,6 @@
-import React, { createElement, useState, useEffect, useRef } from 'react';
+import React, { createElement } from 'react';
 import ReactDOM from 'react-dom';
-import {
-  addWindowMessageListener,
-  DerefContext,
-} from '~/page-handlers/messages';
+import { useWindowMessageListener } from '~/page-handlers/messages';
 import { isDefined, Dict } from '~/lib/types';
 import { doWarn } from '~/logging';
 import { Route, getRouteMaybe } from '~/components/routes';
@@ -44,54 +41,21 @@ const resolveRoute = () => {
   return route;
 };
 
-interface IframeProps<TProps> {
-  route: Route<TProps>;
-  derefContext: DerefContext;
+interface IframeProps {
+  route: Route;
 }
 
-function Iframe<TProps>(props: IframeProps<TProps>) {
-  const [routeComponentProps, setRouteComponentProps] = useState<TProps>(() =>
-    props.route.initialProps(props.derefContext),
-  );
-  const routeComponentPropsRef = useRef<TProps>(routeComponentProps);
-  routeComponentPropsRef.current = routeComponentProps;
-
-  useEffect(() => {
-    addWindowMessageListener(window, (msg) => {
-      if (msg.type === 'init') {
-        setRouteComponentProps({
-          ...routeComponentPropsRef.current,
-          ...props.route.initialProps(msg.payload),
-        });
-        return;
-      }
-
-      if (props.route?.messageToProps && routeComponentPropsRef.current) {
-        const newProps = props.route.messageToProps(
-          msg,
-          routeComponentPropsRef.current,
-        );
-        if (newProps) {
-          setRouteComponentProps(newProps);
-        }
-      }
-    });
-  }, []);
-
-  return createElement(props.route.component, routeComponentProps);
+function Iframe<TProps>(props: IframeProps) {
+  const derefContext = useWindowMessageListener('init');
+  if (!derefContext) {
+    return null;
+  }
+  return createElement(props.route.component, { derefContext });
 }
 
 const route = resolveRoute();
 if (route) {
-  const remove = addWindowMessageListener(window, (msg) => {
-    if (msg.type === 'init') {
-      ReactDOM.render(
-        <Iframe route={route} derefContext={msg.payload} />,
-        document.querySelector('#root'),
-      );
-      remove();
-    }
-  });
+  ReactDOM.render(<Iframe route={route} />, document.querySelector('#root'));
 }
 
 // Dummy export in order for playground to load this script.
