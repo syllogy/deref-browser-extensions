@@ -42,12 +42,12 @@ export default function Playground() {
 
   useEffect(() => {
     void (async () => {
-      const derefContext = await initContentScript(
-        mockextensionApi,
-        (derefContext) => {
+      const { derefContext } = await initContentScript({
+        extensionApi: mockextensionApi,
+        onUpdateDerefContext: (derefContext) => {
           setDerefContext(derefContext);
         },
-      );
+      });
       setDerefContext(derefContext);
     })();
   }, []);

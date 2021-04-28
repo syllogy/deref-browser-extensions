@@ -124,10 +124,15 @@ export const broadcastMessageToIframes = (msg: DerefMessage) => {
 export const addWindowMessageListener = (
   window: Window,
   handler: (msg: DerefMessage) => void,
-) => {
-  window.addEventListener('message', (event) => {
+): (() => void) => {
+  const listener = (event: MessageEvent) => {
     if (isDerefMessage(event.data)) {
       handler(event.data);
     }
-  });
+  };
+
+  window.addEventListener('message', listener);
+  return () => {
+    window.removeEventListener('message', listener);
+  };
 };

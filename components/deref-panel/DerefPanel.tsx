@@ -1,5 +1,8 @@
 import React, { createElement, useEffect } from 'react';
-import { RouteComponentBaseProps, PANEL_SETTINGS } from '~/components/routes';
+import {
+  RouteComponentBaseProps,
+  DEREF_PANEL_SETTINGS,
+} from '~/components/routes';
 import {
   NavContext,
   NavContextType,
@@ -67,7 +70,7 @@ export default function DerefPanel(props: Props) {
 
   return (
     <div className="flex flex-col h-full border-l">
-      <div style={{ height: PANEL_SETTINGS.foldedHeight }}>
+      <div style={{ height: DEREF_PANEL_SETTINGS.foldedHeight }}>
         {createElement(content.header, componentProps)}
       </div>
       {renderedContent && props.derefContext.panelState.expanded && (
