@@ -26,6 +26,16 @@ body {
   overflow: hidden;
 }
 
+hr {
+  margin: 30px 0;
+}
+
+.border-3d {
+  border: 1px solid #b0b0b0;
+  border-bottom-color: #a0a0a0;
+  border-top-color: #c0c0c0;
+}
+
 .lighter {
   opacity: 60%;
   font-size: 0.9em;

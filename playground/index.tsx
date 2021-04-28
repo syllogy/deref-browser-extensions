@@ -7,6 +7,8 @@ import initBackgroundScript from '~/init-background-script';
 import createAuth0Client from '@auth0/auth0-spa-js';
 import '../main.css';
 
+import StylingPlayground from '~/playground/components/StylingPlayground';
+
 const playgroundUrl = 'http://localhost:3000';
 
 void initContentScript(mockextensionApi, () => {
@@ -42,7 +44,8 @@ initBackgroundScript({
 
 ReactDOM.render(
   <React.StrictMode>
-    <Playground />
+    {/*<Playground />*/}
+    <StylingPlayground />
   </React.StrictMode>,
   document.getElementById('root'),
 );
