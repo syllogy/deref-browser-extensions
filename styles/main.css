@@ -16,18 +16,6 @@ body {
   font-size: 0.9em;
 }
 
-.btn {
-  margin: 4px 0 4px 0;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--deref-dark);
-  color: white;
-  border: 1px solid #888888;
-  cursor: pointer;
-}
-
 body {
   font-size: 12px;
 }

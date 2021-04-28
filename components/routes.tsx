@@ -1,5 +1,5 @@
 import { ComponentType } from 'react';
-import DerefPanel from '~/components/DerefPanel';
+import DerefPanel from '~/components/deref-panel/DerefPanel';
 import { doWarn } from '~/logging';
 import { DerefContext, DerefMessage } from '~/page-handlers/messages';
 import DerefButton from '~/components/DerefButton';
@@ -24,15 +24,19 @@ export interface Route<TProps> {
 
 const createRoute = <TProps,>(route: Route<TProps>) => route;
 
+export const PANEL_SETTINGS = {
+  offsetTop: 41,
+  foldedHeight: 48,
+};
+
 const routes = {
   panel: createRoute({
     component: DerefPanel,
     style: {
       position: 'fixed',
-      top: '41px',
+      top: `${PANEL_SETTINGS.offsetTop}px`,
       right: '0',
-      width: '200px',
-      height: '100px',
+      width: '300px',
       zIndex: '100',
       display: 'none',
     },

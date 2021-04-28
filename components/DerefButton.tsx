@@ -10,7 +10,7 @@ export default function DerefButton(props: Props) {
       <div
         className="deref-btn"
         onClick={() => {
-          postDerefMessage({ type: 'togglePanel', payload: undefined });
+          postDerefMessage({ type: 'togglePanel', payload: {} });
         }}
       >
         Deref
