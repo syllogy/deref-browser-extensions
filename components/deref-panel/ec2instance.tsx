@@ -12,6 +12,7 @@ import PanelHeaderMenu, {
   renderPanelHeaderMenuContent,
 } from '~/components/deref-panel/PanelHeaderMenu';
 import PriceBar from '~/components/PriceBar';
+import AuthWrapper from '~/components/AuthWrapper';
 
 interface MenuItemProps {
   derefContext: DerefContext;
@@ -53,7 +54,11 @@ const menuItems: MenuItem[] = [
     tab: 'notes',
     render: (props: MenuItemProps) => 'Notes',
     renderContent(props: MenuItemProps) {
-      return <div>Notes content</div>;
+      return (
+        <AuthWrapper derefContext={props.derefContext}>
+          <div>Notes</div>
+        </AuthWrapper>
+      );
     },
   },
 ];
