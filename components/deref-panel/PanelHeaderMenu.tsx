@@ -19,33 +19,37 @@ export default function PanelHeaderMenu<
   TItem extends PanelHeaderMenuItem<TItemProps>
 >(props: Props<TItemProps, TItem>) {
   return (
-    <div className="flex items-stretch">
+    <div className="flex items-stretch h-full">
       {props.items.map((item, i) => {
         const isSelected = props.isItemSelected(item);
         return (
-          <div
-            key={i}
-            className={classNames(
-              'cursor-pointer flex-grow border-b border-gray-300 text-center h-10 flex items-center justify-center font-medium',
-              {
-                'text-white bg-blue-600 border-blue-800': isSelected,
-              },
-            )}
-            onClick={() => {
-              postDerefMessage({
-                type: 'updateNavContext',
-                payload: {
-                  navContext: props.getItemNavContext(item),
+          <>
+            {i !== 0 && <div className="w-px h-full bg-gray-300" />}
+            <div
+              key={i}
+              className={classNames(
+                'cursor-pointer flex-grow border-b text-center h-full flex items-center justify-center font-medium pt-px',
+                {
+                  'bg-white border-white': isSelected,
+                  'bg-gray-100 hover:bg-gray-200 border-gray-300': !isSelected,
                 },
-              });
-              postDerefMessage({
-                type: 'togglePanelExpand',
-                payload: { expand: true },
-              });
-            }}
-          >
-            {item.render(props.itemProps)}
-          </div>
+              )}
+              onClick={() => {
+                postDerefMessage({
+                  type: 'updateNavContext',
+                  payload: {
+                    navContext: props.getItemNavContext(item),
+                  },
+                });
+                postDerefMessage({
+                  type: 'togglePanelExpand',
+                  payload: { expand: true },
+                });
+              }}
+            >
+              {item.render(props.itemProps)}
+            </div>
+          </>
         );
       })}
     </div>
