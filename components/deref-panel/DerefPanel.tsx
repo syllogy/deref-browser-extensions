@@ -70,7 +70,7 @@ export default function DerefPanel(props: RouteComponentProps) {
     >
       <div
         style={{ height: DEREF_PANEL_SETTINGS.foldedHeight }}
-        className="relative"
+        className="relative flex-none"
       >
         {createElement(content.header, componentProps)}
       </div>
