@@ -27,7 +27,7 @@ export default function NoteListItem(props: Props) {
           saveOnBlur={true}
         />
       ) : (
-        <div className="flex">
+        <div className="flex py-2">
           <div
             className={classNames('flex-grow', 'whitespace-pre-wrap', {
               'cursor-pointer': !!props.api,

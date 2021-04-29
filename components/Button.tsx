@@ -11,9 +11,9 @@ type Size = keyof typeof sizeClasses;
 
 const variantClasses = {
   default:
-    'rounded hover:bg-gray-100 border border-b-2 border-gray-200 hover:border-gray-300 text-black my-2',
+    'rounded hover:bg-gray-100 border border-b-2 border-gray-200 hover:border-gray-300 text-black',
   primary:
-    'rounded bg-blue-500 hover:bg-blue-600 border border-b-2 border-blue-600 hover:border-blue-800 text-white my-2',
+    'rounded bg-blue-500 hover:bg-blue-600 border border-b-2 border-blue-600 hover:border-blue-800 text-white',
 };
 
 type Variant = keyof typeof variantClasses;

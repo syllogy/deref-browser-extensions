@@ -47,7 +47,7 @@ export default function NoteListEditor(props: Props) {
             minRows={3}
             renderControl={(controlProps) => {
               return (
-                <div>
+                <div className="mt-2 text-right">
                   <Button
                     variant="primary"
                     onClick={async () => {
