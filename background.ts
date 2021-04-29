@@ -82,5 +82,9 @@ webextensionApi.addListener(
         ? ['blocking', 'responseHeaders']
         : ['blocking', 'responseHeaders', 'extraHeaders'],
     );
+
+    setTimeout(() => {
+      browser.webRequest.onHeadersReceived.removeListener(listener);
+    }, 15_000);
   },
 );
