@@ -7,10 +7,9 @@ import { cloudTrailXsrf } from '~/page-handlers/cloudtrail-xsrf';
 //import { fiddle } from '~/page-handlers/fiddle';
 
 export const pageHandlers: PageHandler[] = [
-  ec2InstanceWizard,
-  ec2InstanceList,
+  cloudTrailXsrf,
   derefButton,
   derefPanel,
-  cloudTrailXsrf,
-  //fiddle,
+  ec2InstanceWizard,
+  ec2InstanceList,
 ];

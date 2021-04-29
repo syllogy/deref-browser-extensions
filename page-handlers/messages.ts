@@ -1,9 +1,33 @@
 import { doWarn } from '~/logging';
 import { findDerefContainers } from '~/page-handlers/utils';
 import { AuthenticatedUser } from '~/lib/extension-api/messages';
+import { useEffect, useState } from 'react';
+
+export interface BaseNavContext<TData> {
+  data: TData;
+}
+
+export interface Ec2InstanceNavContext
+  extends BaseNavContext<{
+    instanceId: string;
+    tab?: 'info' | 'price' | 'notes';
+  }> {
+  type: 'ec2Instance';
+}
+
+export type NavContext = Ec2InstanceNavContext;
+
+export type NavContextType<
+  TNavContext extends NavContext
+> = TNavContext['type'];
 
 export interface DerefContext {
   user: AuthenticatedUser | null;
+  panelState: {
+    expanded: boolean;
+    visible: boolean;
+  };
+  navContext: NavContext | null;
 }
 
 export interface BaseMessage<TPayload> {
@@ -28,8 +52,25 @@ export interface PriceMessage
   type: 'price';
 }
 
-export interface TogglePanelMessage extends BaseMessage<void> {
+export interface TogglePanelMessage
+  extends BaseMessage<{
+    show?: boolean;
+  }> {
   type: 'togglePanel';
+}
+
+export interface TogglePanelExpandMessage
+  extends BaseMessage<{
+    expand?: boolean;
+  }> {
+  type: 'togglePanelExpand';
+}
+
+export interface UpdateNavContextMessage
+  extends BaseMessage<{
+    navContext: NavContext | null;
+  }> {
+  type: 'updateNavContext';
 }
 
 export interface LoginMessage extends BaseMessage<void> {
@@ -44,13 +85,22 @@ export type DerefMessage =
   | InitMessage
   | PriceMessage
   | TogglePanelMessage
+  | TogglePanelExpandMessage
+  | UpdateNavContextMessage
   | LoginMessage
   | LogoutMessage
   | TokenMessage;
 
+export type DerefMessageType<TMessage extends DerefMessage> = TMessage['type'];
+
 export type DerefMessagePayloadOf<
-  TMessage extends DerefMessage
-> = TMessage extends BaseMessage<infer TPayload> ? TPayload : never;
+  TMessage extends DerefMessage,
+  TType extends DerefMessageType<TMessage> = any
+> = TMessage extends BaseMessage<infer TPayload> & {
+  type: TType;
+}
+  ? TPayload
+  : never;
 
 export const makeDerefMessage = (msg: DerefMessage): DerefMessage => {
   return { isDerefMessage: true, ...msg };
@@ -88,10 +138,36 @@ export const broadcastMessageToIframes = (msg: DerefMessage) => {
 export const addWindowMessageListener = (
   window: Window,
   handler: (msg: DerefMessage) => void,
-) => {
-  window.addEventListener('message', (event) => {
+): (() => void) => {
+  const listener = (event: MessageEvent) => {
     if (isDerefMessage(event.data)) {
       handler(event.data);
     }
-  });
+  };
+
+  window.addEventListener('message', listener);
+  return () => {
+    window.removeEventListener('message', listener);
+  };
+};
+
+export const useWindowMessageListener = <
+  TMessage extends DerefMessage,
+  TType extends DerefMessageType<TMessage>
+>(
+  type: TType,
+) => {
+  const [payload, setPayload] = useState<DerefMessagePayloadOf<
+    TMessage,
+    TType
+  > | null>(null);
+  useEffect(() => {
+    return addWindowMessageListener(window, (msg) => {
+      if (msg.type === type) {
+        setPayload(msg.payload as DerefMessagePayloadOf<TMessage, TType>);
+      }
+    });
+  }, []);
+
+  return payload;
 };

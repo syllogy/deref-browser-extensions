@@ -4,7 +4,7 @@ import {
   IndexSearch,
   regionNameMap,
 } from '~/price-indexer/index-key';
-import { DerefContext } from '~/page-handlers/messages';
+import { DerefContext, NavContext } from '~/page-handlers/messages';
 import {
   MakeDerefContainerOptions,
   makeDerefContainer,
@@ -28,6 +28,9 @@ export const urlMatchesRegex = (url: RegExp): ConditionFn => {
 
 export interface PageHandler {
   conditions: ConditionFn[];
+  navContextUpdater?: (
+    prevNavContext: NavContext | null,
+  ) => Promise<NavContext | void> | NavContext | void;
   handler: (context: DerefContext) => Promise<void> | void;
 }
 

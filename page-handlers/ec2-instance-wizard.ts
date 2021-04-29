@@ -1,9 +1,9 @@
 import { doWarn } from '~/logging';
 import {
-  postMessageToIframe,
   PriceMessage,
   DerefContext,
   DerefMessagePayloadOf,
+  broadcastMessageToIframes,
 } from '~/page-handlers/messages';
 import {
   IndexSearch,
@@ -96,7 +96,7 @@ export const ec2InstanceWizard: PageHandler = {
         lastUpdatedAt: null,
       };
 
-      postMessageToIframe(derefContainer, { type: 'price', payload });
+      broadcastMessageToIframes({ type: 'price', payload });
     }
   },
 };

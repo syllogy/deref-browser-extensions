@@ -1,9 +1,9 @@
-import { createElement } from 'react';
+import React, { createElement } from 'react';
 import ReactDOM from 'react-dom';
-import { addWindowMessageListener } from '~/page-handlers/messages';
+import { useWindowMessageListener } from '~/page-handlers/messages';
 import { isDefined, Dict } from '~/lib/types';
 import { doWarn } from '~/logging';
-import { Route, RouteComponentProps, getRouteMaybe } from '~/components/routes';
+import { Route, getRouteMaybe } from '~/components/routes';
 
 type ParsedQuery = Dict<string>;
 
@@ -26,16 +26,6 @@ const parseQuery = (string: string): ParsedQuery => {
   return query;
 };
 
-const renderRoute = <TProps,>(
-  route: Route<TProps>,
-  props: RouteComponentProps<TProps>,
-) => {
-  ReactDOM.render(
-    createElement(route.component, props),
-    document.querySelector('#root'),
-  );
-};
-
 const resolveRoute = () => {
   const query = parseQuery(window.location.search);
   if (!isDefined(query.route)) {
@@ -51,23 +41,22 @@ const resolveRoute = () => {
   return route;
 };
 
-let props: RouteComponentProps<unknown> | undefined = undefined;
-addWindowMessageListener(window, (msg) => {
-  const route = resolveRoute();
-  if (!route) {
-    return;
-  }
+interface IframeProps {
+  route: Route;
+}
 
-  if (msg.type === 'init') {
-    props = { ...(props ?? {}), derefContext: msg.payload };
-    renderRoute(route, props);
-    return;
+function Iframe<TProps>(props: IframeProps) {
+  const derefContext = useWindowMessageListener('init');
+  if (!derefContext) {
+    return null;
   }
+  return createElement(props.route.component, { derefContext });
+}
 
-  if (props) {
-    props = route.messageToProps(msg, props);
-    renderRoute(route, props);
-  }
-});
+const route = resolveRoute();
+if (route) {
+  ReactDOM.render(<Iframe route={route} />, document.querySelector('#root'));
+}
 
+// Dummy export in order for playground to load this script.
 export const iframeIndex = null;

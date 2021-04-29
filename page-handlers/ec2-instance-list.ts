@@ -2,10 +2,10 @@ import { getCloudTrailEvents } from '~/lib/cloudtrail/client';
 import { getCloudTrailXsrfToken } from '~/lib/cloudtrail/xsrf';
 import { doWarn } from '~/logging';
 import {
-  postMessageToIframe,
   PriceMessage,
   DerefContext,
   DerefMessagePayloadOf,
+  broadcastMessageToIframes,
 } from '~/page-handlers/messages';
 import {
   IndexSearch,
@@ -53,7 +53,9 @@ const getInstanceSearch = (): IndexSearch | null => {
   return isIndexSearch(search) ? search : null;
 };
 
-const getDerefContainer = async (context: DerefContext) => {
+const getDerefContainer = async (
+  context: DerefContext,
+): Promise<HTMLIFrameElement | null> => {
   const ec2Iframe = getEc2Iframe();
   const parent = ec2Iframe?.contentDocument?.querySelector(
     'h4.awsui-util-ml-m',
@@ -65,6 +67,27 @@ export const ec2InstanceList: PageHandler = {
   conditions: [
     urlMatchesRegex(/.*console.aws.amazon.com\/ec2\/v2\/home?.*#Instances:/),
   ],
+  navContextUpdater: (prevNavContext) => {
+    // Instance id has an icon next to it - seems hard to extract only the text part.
+    const instanceIdContent = getLabelledValue('label-for-Instance ID');
+    const instanceIdParts = instanceIdContent?.split(/\s/);
+    const instanceId = instanceIdParts?.[instanceIdParts.length - 1];
+
+    if (instanceId) {
+      if (
+        prevNavContext?.type === 'ec2Instance' &&
+        prevNavContext.data.instanceId === instanceId
+      ) {
+        return prevNavContext;
+      }
+      return {
+        type: 'ec2Instance',
+        data: {
+          instanceId,
+        },
+      };
+    }
+  },
   async handler(context) {
     const instanceSearch = getInstanceSearch();
     if (!instanceSearch) {
@@ -104,16 +127,14 @@ export const ec2InstanceList: PageHandler = {
           : lastUpdatedAt;
     }
 
-    const derefContainer = await getDerefContainer(context);
+    await getDerefContainer(context);
 
-    if (derefContainer) {
-      const payload: DerefMessagePayloadOf<PriceMessage> = {
-        hourlyCost: hourlyPrice,
-        type: instanceSearch.instanceType,
-        lastUpdatedAt,
-      };
+    const payload: DerefMessagePayloadOf<PriceMessage> = {
+      hourlyCost: hourlyPrice,
+      type: instanceSearch.instanceType,
+      lastUpdatedAt,
+    };
 
-      postMessageToIframe(derefContainer, { type: 'price', payload });
-    }
+    broadcastMessageToIframes({ type: 'price', payload });
   },
 };
