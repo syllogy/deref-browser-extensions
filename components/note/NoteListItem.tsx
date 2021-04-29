@@ -42,7 +42,7 @@ export default function NoteListItem(props: Props) {
                 size="sm"
                 onClick={async () => props.api?.delete(props.note.id)}
               >
-                Delete
+                ⨉
               </Button>
             </div>
           )}
