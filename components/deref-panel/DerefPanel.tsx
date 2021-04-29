@@ -74,7 +74,7 @@ export default function DerefPanel(props: RouteComponentProps) {
       >
         {createElement(content.header, componentProps)}
       </div>
-      {renderedContent && props.derefContext.panelState.expanded && (
+      {renderedContent && props.derefContext.panelState.expanded ? (
         <>
           <div className="flex-grow px-3 py-4 overflow-auto">
             {renderedContent}
@@ -86,6 +86,8 @@ export default function DerefPanel(props: RouteComponentProps) {
             )}
           </div>
         </>
+      ) : (
+        <div className="h-px bg-gray-300 relative" style={{ marginTop: -1 }} />
       )}
     </div>
   );
