@@ -23,6 +23,7 @@ const createRoute = (route: Route) => route;
 export const DEREF_PANEL_SETTINGS = {
   offsetTop: 41,
   foldedHeight: 48,
+  offsetBottom: 35,
 };
 
 const routes = {
@@ -36,7 +37,9 @@ const routes = {
       zIndex: '100',
       display: context.panelState.visible ? 'block' : 'none',
       height: context.panelState.expanded
-        ? `calc(100vh - ${DEREF_PANEL_SETTINGS.offsetTop}px)`
+        ? `calc(100vh - ${
+            DEREF_PANEL_SETTINGS.offsetTop + DEREF_PANEL_SETTINGS.offsetBottom
+          }px)`
         : `${DEREF_PANEL_SETTINGS.foldedHeight}px`,
     }),
   }),

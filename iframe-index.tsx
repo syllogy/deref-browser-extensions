@@ -55,7 +55,9 @@ function Iframe<TProps>(props: IframeProps) {
 
 const route = resolveRoute();
 if (route) {
-  ReactDOM.render(<Iframe route={route} />, document.querySelector('#root'));
+  window.onload = () => {
+    ReactDOM.render(<Iframe route={route} />, document.querySelector('#root'));
+  };
 }
 
 // Dummy export in order for playground to load this script.

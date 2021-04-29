@@ -64,7 +64,7 @@ export default function DerefPanel(props: RouteComponentProps) {
   }, [props.derefContext]);
 
   return (
-    <div className="flex flex-col h-full border-l">
+    <div className="flex flex-col h-full border-l bg-white">
       <div style={{ height: DEREF_PANEL_SETTINGS.foldedHeight }}>
         {createElement(content.header, componentProps)}
       </div>
