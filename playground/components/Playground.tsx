@@ -84,7 +84,7 @@ export default function Playground() {
             </g>
           </svg>
         </div>
-        <div className="float-right mr-2">
+        <div className="float-right">
           <DerefButton />
         </div>
       </div>

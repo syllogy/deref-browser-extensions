@@ -19,7 +19,9 @@ export function DefaultFooter({ derefContext }: PanelComponentProps<any>) {
   if (derefContext.user) {
     return (
       <div className="flex items-center">
-        <div className="flex-grow">{derefContext.user.email}</div>
+        <div className="flex-grow font-medium text-xs">
+          👤 {derefContext.user.email}
+        </div>
         <Button
           size="sm"
           onClick={async () => {
