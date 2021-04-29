@@ -1,0 +1,6 @@
+query MyNotes {
+  myNotes {
+    id
+    body
+  }
+}

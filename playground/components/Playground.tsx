@@ -9,9 +9,11 @@ import createAuth0Client from '@auth0/auth0-spa-js';
 import initContentScript from '~/init-content-script';
 
 const playgroundUrl = 'http://localhost:3000';
+const graphqlUri = 'http://localhost:4000/graphql';
 
 initBackgroundScript({
   extensionApi: mockextensionApi,
+  graphqlUri,
   auth0: async () => {
     const auth0 = await createAuth0Client({
       domain: 'deref-extension.us.auth0.com',

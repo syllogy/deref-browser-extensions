@@ -1,9 +1,28 @@
 import { ExtensionApi } from '~/lib/extension-api/api';
 import { Auth0Client, User } from '@auth0/auth0-spa-js';
 import { AuthenticatedUser } from '~/lib/extension-api/messages';
+import { BatchHttpLink } from '@apollo/client/link/batch-http';
+import {
+  ApolloClient,
+  NormalizedCacheObject,
+  InMemoryCache,
+} from '@apollo/client';
+import { MyNotesDocument } from '~/graphql/types';
+
+export const createApolloClient = (uri: string) => {
+  const link = new BatchHttpLink({ uri });
+
+  const apolloClient: ApolloClient<NormalizedCacheObject> = new ApolloClient({
+    cache: new InMemoryCache(),
+    link,
+  });
+
+  return apolloClient;
+};
 
 interface InitBackgroundScriptConfig {
   extensionApi: ExtensionApi;
+  graphqlUri?: string;
   auth0: () => Promise<Auth0Client>;
   login: (auth0: Auth0Client) => Promise<void>;
   logout: (auth0: Auth0Client) => Promise<void>;
@@ -23,6 +42,17 @@ const initBackgroundScript = ({
   ): AuthenticatedUser | null => {
     return (auth0User as AuthenticatedUser) ?? null;
   };
+
+  if (config.graphqlUri) {
+    const apolloClient = createApolloClient(config.graphqlUri);
+    void apolloClient
+      .query({
+        query: MyNotesDocument,
+      })
+      .then((r) => {
+        console.log('Got result', r);
+      });
+  }
 
   extensionApi.addListener('init', async (payload) => {
     auth0 = await getAuth0();
