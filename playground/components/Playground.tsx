@@ -2,22 +2,22 @@ import React, { useState, useEffect } from 'react';
 import Iframe from '~/playground/components/Iframe';
 import { getRouteKeys } from '~/components/routes';
 import MessagePoster from '~/playground/components/MessagePoster';
-import { DerefContext } from '~/page-handlers/messages';
+import { DerefContext, useWindowMessageListener } from '~/page-handlers/messages';
 import initBackgroundScript from '~/init-background-script';
 import mockextensionApi from '~/lib/extension-api/mockextension-api';
 import createAuth0Client from '@auth0/auth0-spa-js';
 import initContentScript from '~/init-content-script';
+import { useApolloClient } from '~/page-handlers/api';
+import { MyNotesDocument } from '~/graphql/types';
 
 const playgroundUrl = 'http://localhost:3000';
-const graphqlUri = 'http://localhost:4000/graphql';
 
 initBackgroundScript({
   extensionApi: mockextensionApi,
-  graphqlUri,
   auth0: async () => {
     const auth0 = await createAuth0Client({
-      domain: 'deref-extension.us.auth0.com',
-      client_id: 'Kfo7nyY4PXggtS4r3vFOiaJnAAO0A2pP',
+      domain: 'deref.us.auth0.com',
+      client_id: '9KLuebquJDhIPzm1qFwULoyGVr2g01z2',
       scope: 'email',
       cacheLocation: 'localstorage',
       redirect_uri: playgroundUrl,
@@ -38,6 +38,7 @@ initBackgroundScript({
     });
   },
 });
+
 
 export default function Playground() {
   const [derefContext, setDerefContext] = useState<DerefContext>();
