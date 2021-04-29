@@ -53,7 +53,7 @@ const routes = {
   priceBar: createRoute({
     component: PriceBar,
     style: (context) => ({
-      height: '33px',
+      height: '40px',
       minWidth: '550px',
     }),
   }),
