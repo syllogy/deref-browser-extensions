@@ -3,6 +3,7 @@ import { doWarn } from '~/logging';
 
 // Unhelpfully the types returned in the frontend proxy
 // are different from the official API types.
+// This is a first pass and probably quite wrong.
 const CloudTrailEvent = rt.Record({
   eventId: rt.String,
   eventVersion: rt.Optional(rt.String),
