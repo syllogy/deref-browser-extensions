@@ -70,8 +70,7 @@ webextensionApi.addListener(
       return { responseHeaders: headers };
     };
 
-    // FIXME: This completely removes security for the AWS console. It needs to
-    // be scoped to the specific tab and probably to a specific request.
+    // TODO: More narrowly scope this exception.
     browser.webRequest.onHeadersReceived.addListener(
       listener,
       { urls: ['*://*.aws.amazon.com/*'], types: ['sub_frame'], tabId },
