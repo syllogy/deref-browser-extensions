@@ -7,6 +7,7 @@ import initBackgroundScript from '~/init-background-script';
 import mockextensionApi from '~/lib/extension-api/mockextension-api';
 import createAuth0Client from '@auth0/auth0-spa-js';
 import initContentScript from '~/init-content-script';
+import DerefButton from '~/components/DerefButton';
 
 const playgroundUrl = 'http://localhost:3000';
 
@@ -63,7 +64,11 @@ export default function Playground() {
           background: '#232f3e',
           height: 41,
         }}
-      />
+      >
+        <div className="float-right mr-2">
+          <DerefButton />
+        </div>
+      </div>
       <h1 className="text-lg font-semibold">Playground</h1>
 
       <div style={{ display: 'flex', alignItems: 'stretch' }}>

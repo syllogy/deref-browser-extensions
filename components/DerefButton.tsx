@@ -4,9 +4,9 @@ import { postDerefMessage } from '~/page-handlers/messages';
 
 export default function DerefButton(props: RouteComponentProps) {
   return (
-    <div className="deref-button">
+    <div className="h-full flex items-center">
       <div
-        className="deref-btn"
+        className="px-3 py-1 rounded-sm border text-white border-gray-500 bg-gray-900 hover:bg-gray-800 flex items-center select-none cursor-pointer"
         onClick={() => {
           postDerefMessage({ type: 'togglePanel', payload: {} });
         }}
