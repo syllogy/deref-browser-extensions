@@ -119,17 +119,17 @@ export const ec2InstanceList: PageHandler = {
       return;
     }
     const region = getRegionCode();
-    let lastUpdatedAt: null | Date = null;
+    let lastUpdated: null | { at: Date; by: string } = null;
     for await (const event of getCloudTrailEvents({
       region,
       lookupField: 'ResourceName',
       lookupValue: instanceId,
       xsrfToken,
     })) {
-      lastUpdatedAt =
-        !lastUpdatedAt || lastUpdatedAt.getTime() < event.eventTime
-          ? new Date(event.eventTime)
-          : lastUpdatedAt;
+      lastUpdated =
+        !lastUpdated || lastUpdated.at.getTime() < event.eventTime
+          ? { at: new Date(event.eventTime), by: event.username }
+          : lastUpdated;
     }
 
     await getDerefContainer(context);
@@ -137,7 +137,7 @@ export const ec2InstanceList: PageHandler = {
     const payload: DerefMessagePayloadOf<PriceMessage> = {
       hourlyCost: hourlyPrice,
       type: instanceSearch.instanceType,
-      lastUpdatedAt,
+      lastUpdated,
     };
 
     broadcastMessageToIframes({ type: 'price', payload });

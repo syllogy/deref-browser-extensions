@@ -50,7 +50,7 @@ const messages: Message[] = [
       payload: {
         type: 't4g.micro',
         hourlyCost: Math.random() * 1000,
-        lastUpdatedAt: new Date(),
+        lastUpdated: { at: new Date(), by: 'a-very-real-user' },
       },
     }),
   },

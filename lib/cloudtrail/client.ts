@@ -1,23 +1,12 @@
 import * as rt from 'runtypes';
 import { doWarn } from '~/logging';
 
-// Unhelpfully the types returned in the frontend proxy are just slightly
-// different from the official API types. So far I've just noticed difference in
-// cases of keys (e.g. eventId vs eventID).
+// Unhelpfully the types returned in the frontend proxy
+// are different from the official API types.
 const CloudTrailEvent = rt.Record({
   eventId: rt.String,
   eventVersion: rt.Optional(rt.String),
-  userIdentity: rt.Optional(
-    rt.Record({
-      type: rt.String,
-      principalId: rt.Optional(rt.String),
-      arn: rt.Optional(rt.String),
-      accountId: rt.Optional(rt.String),
-      accessKeyId: rt.Optional(rt.String),
-      userName: rt.Optional(rt.String),
-      invokedBy: rt.Optional(rt.String),
-    }),
-  ),
+  username: rt.String,
   eventTime: rt.Number,
   eventSource: rt.String,
   eventName: rt.Optional(rt.String),

@@ -47,7 +47,7 @@ export interface PriceMessage
   extends BaseMessage<{
     type: string;
     hourlyCost: number;
-    lastUpdatedAt: Date | null;
+    lastUpdated: null | { at: Date; by: string };
   }> {
   type: 'price';
 }

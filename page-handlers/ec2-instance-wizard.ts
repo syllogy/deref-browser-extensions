@@ -97,7 +97,7 @@ export const ec2InstanceWizard: PageHandler = {
       const payload: DerefMessagePayloadOf<PriceMessage> = {
         hourlyCost: hourlyPrice,
         type: instanceSearch.instanceType,
-        lastUpdatedAt: null,
+        lastUpdated: null,
       };
 
       broadcastMessageToIframes({ type: 'price', payload });

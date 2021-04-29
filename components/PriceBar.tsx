@@ -36,9 +36,12 @@ export default function PriceBar(props: Props) {
           </span>
           <span className="lighter">monthly</span>
         </p>
-        <p>
-          {price.lastUpdatedAt ? <TimeAgo date={price.lastUpdatedAt} /> : null}
-        </p>
+        {price.lastUpdated ? (
+          <p>
+            {price.lastUpdated.by}{' '}
+            <TimeAgo className="lighter" date={price.lastUpdated.at} />
+          </p>
+        ) : null}
       </div>
     </div>
   );
