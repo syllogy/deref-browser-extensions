@@ -27,14 +27,14 @@ export default function PriceBar(props: Props) {
         <img src="./Compute.svg" />
         <p>
           <span className="instance-type">{price.type}</span>
-          <span className="lighter">instance</span>
+          <span className="lighter"> instance</span>
         </p>
         <p>
           <span className="currency">US$</span>
           <span className="deref-monthly-cost">
             {(price.hourlyCost * 730).toFixed(2)}
           </span>
-          <span className="lighter">monthly</span>
+          <span className="lighter"> monthly</span>
         </p>
         {price.lastUpdated ? (
           <p>
