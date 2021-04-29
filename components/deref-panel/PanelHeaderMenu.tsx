@@ -26,9 +26,9 @@ export default function PanelHeaderMenu<
           <div
             key={i}
             className={classNames(
-              'cursor-pointer flex-grow border text-center',
+              'cursor-pointer flex-grow border-b border-gray-300 text-center h-10 flex items-center justify-center font-medium',
               {
-                'bg-blue-500': isSelected,
+                'text-white bg-blue-600 border-blue-800': isSelected,
               },
             )}
             onClick={() => {
