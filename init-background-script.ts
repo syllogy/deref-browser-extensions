@@ -52,6 +52,10 @@ const initBackgroundScript = ({
       return;
     }
     const url = arnToUrl(text);
+    if (!url) {
+      // TODO: Somehow report failure to the user.
+      return;
+    }
     switch (disposition) {
       case 'currentTab':
         extensionApi.tabs.update({ url });
