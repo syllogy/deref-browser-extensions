@@ -88,3 +88,19 @@ body {
 .price-bar .currency {
   color: #00a508;
 }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  margin: 4px;
+  position: relative;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(96, 96, 96, 0.25);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(96, 96, 96, 0.5);
+}
