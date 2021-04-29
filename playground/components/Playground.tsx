@@ -85,7 +85,7 @@ export default function Playground() {
           </svg>
         </div>
         <div className="float-right">
-          <DerefButton />
+          <DerefButton derefContext={derefContext} />
         </div>
       </div>
       <h1 className="text-lg font-semibold">Playground</h1>
