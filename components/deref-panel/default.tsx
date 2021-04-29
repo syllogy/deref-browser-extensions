@@ -4,7 +4,11 @@ import { postDerefMessage } from '~/page-handlers/messages';
 import Button from '~/components/Button';
 
 export function DefaultHeader(props: PanelComponentProps<any>) {
-  return <div>Header</div>;
+  return (
+    <div className="flex h-full items-center pb-1 px-3 font-semibold">
+      Header
+    </div>
+  );
 }
 
 export function DefaultContent(props: PanelComponentProps<any>) {
