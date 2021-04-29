@@ -58,7 +58,13 @@ export default function Playground() {
 
   return (
     <div>
-      <h1>Playground</h1>
+      <div
+        style={{
+          background: '#232f3e',
+          height: 41,
+        }}
+      />
+      <h1 className="text-lg font-semibold">Playground</h1>
 
       <div style={{ display: 'flex', alignItems: 'stretch' }}>
         <div style={{ borderRight: '1px solid gray', width: 200 }}>
@@ -72,6 +78,15 @@ export default function Playground() {
           ))}
         </div>
       </div>
+      <div
+        style={{
+          background: '#232f3e',
+          height: 35,
+          width: '100%',
+          bottom: 0,
+          position: 'absolute',
+        }}
+      />
     </div>
   );
 }
