@@ -65,8 +65,8 @@ export default function Playground() {
           height: 41,
         }}
       >
-        <div className="float-left flex h-full items-center ml-4">
-          <svg width={32} height={20} viewBox="0 0 29 17" focusable="false">
+        <div className="float-left flex h-full items-center ml-9 pb-0.5">
+          <svg width={36} height={20} viewBox="0 0 29 17" focusable="false">
             <g fill="none" fill-rule="evenodd">
               <path
                 fill="#ffffff"
