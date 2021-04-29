@@ -54,6 +54,41 @@ const getInstanceSearch = (): IndexSearch | null => {
   return isIndexSearch(search) ? search : null;
 };
 
+const getLastUpdatedInfo = async (): Promise<null | {
+  at: Date;
+  by: string;
+}> => {
+  const instanceId = getLabelledValue('label-for-Instance ID')
+    ?.split(/\s+/)
+    .pop()
+    ?.trim();
+  if (!instanceId) {
+    doWarn('No instance ID found');
+    return null;
+  }
+
+  const xsrfToken = await getCloudTrailXsrfToken();
+  if (!xsrfToken) {
+    doWarn('Cloudtrail XSRF token not found');
+    return null;
+  }
+  const region = getRegionCode();
+  let lastUpdated: null | { at: Date; by: string } = null;
+  for await (const event of getCloudTrailEvents({
+    region,
+    lookupField: 'ResourceName',
+    lookupValue: instanceId,
+    xsrfToken,
+  })) {
+    lastUpdated =
+      !lastUpdated || lastUpdated.at.getTime() < event.eventTime
+        ? { at: new Date(event.eventTime), by: event.username }
+        : lastUpdated;
+  }
+
+  return lastUpdated;
+};
+
 const getDerefContainer = async (
   context: DerefContext,
 ): Promise<HTMLIFrameElement | null> => {
@@ -104,40 +139,12 @@ export const ec2InstanceList: PageHandler = {
       return;
     }
 
-    const instanceId = getLabelledValue('label-for-Instance ID')
-      ?.split(/\s+/)
-      .pop()
-      ?.trim();
-    if (!instanceId) {
-      doWarn('No instance ID found');
-      return;
-    }
-
-    const xsrfToken = await getCloudTrailXsrfToken();
-    if (!xsrfToken) {
-      doWarn('Cloudtrail XSRF token not found');
-      return;
-    }
-    const region = getRegionCode();
-    let lastUpdated: null | { at: Date; by: string } = null;
-    for await (const event of getCloudTrailEvents({
-      region,
-      lookupField: 'ResourceName',
-      lookupValue: instanceId,
-      xsrfToken,
-    })) {
-      lastUpdated =
-        !lastUpdated || lastUpdated.at.getTime() < event.eventTime
-          ? { at: new Date(event.eventTime), by: event.username }
-          : lastUpdated;
-    }
-
     await getDerefContainer(context);
 
     const payload: DerefMessagePayloadOf<PriceMessage> = {
       hourlyCost: hourlyPrice,
       type: instanceSearch.instanceType,
-      lastUpdated,
+      lastUpdated: await getLastUpdatedInfo(),
     };
 
     broadcastMessageToIframes({ type: 'price', payload });
