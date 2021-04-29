@@ -1,4 +1,5 @@
 import React from 'react';
+import TimeAgo from 'react-timeago';
 import { RouteComponentProps } from '~/components/routes';
 import {
   useWindowMessageListener,
@@ -35,9 +36,9 @@ export default function PriceBar(props: Props) {
           </span>
           <span className="lighter">monthly</span>
         </p>
-        {props.price?.lastUpdatedAt && (
-          <p>{props.price.lastUpdatedAt.toISOString()}</p>
-        )}
+        <p>
+          {price.lastUpdatedAt ? <TimeAgo date={price.lastUpdatedAt} /> : null}
+        </p>
       </div>
     </div>
   );
