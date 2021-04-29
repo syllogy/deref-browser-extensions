@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import { PanelComponentProps } from '~/components/deref-panel/types';
 import {
   Ec2InstanceNavContext,
@@ -13,6 +13,9 @@ import PanelHeaderMenu, {
 } from '~/components/deref-panel/PanelHeaderMenu';
 import PriceBar from '~/components/PriceBar';
 import AuthWrapper from '~/components/AuthWrapper';
+import NoteListEditor from '~/components/note/NoteListEditor';
+import { Note, NoteApi } from '~/components/note/types';
+import { randomString } from '~/lib/util/string';
 
 interface MenuItemProps {
   derefContext: DerefContext;
@@ -56,7 +59,7 @@ const menuItems: MenuItem[] = [
     renderContent(props: MenuItemProps) {
       return (
         <AuthWrapper derefContext={props.derefContext}>
-          <div>Notes</div>
+          <MockNoteListEditor />
         </AuthWrapper>
       );
     },
@@ -109,3 +112,61 @@ export function Ec2InstanceContent(
     isItemSelected: getIsItemSelected(props),
   });
 }
+
+function MockNoteListEditor() {
+  const { notes, api } = useMockNotesApi();
+
+  return <NoteListEditor notes={notes} api={api} />;
+}
+
+interface MockNotesApiHook {
+  notes: Note[];
+  api: NoteApi;
+}
+
+const useMockNotesApi = (): MockNotesApiHook => {
+  const [notes, setNotes] = useState<Note[]>(() => {
+    const notes: Note[] = [];
+    for (let i = 0; i < 20; i++) {
+      notes.push({ id: randomString(10), content: `Lorem ipsum note ${i}` });
+    }
+    return notes;
+  });
+
+  const updateNotes = <T extends unknown>(
+    newNotes: Note[],
+    returnVal: T,
+  ): Promise<T> => {
+    return new Promise<T>((resolve) => {
+      setTimeout(() => {
+        setNotes(newNotes);
+        resolve(returnVal);
+      }, 300);
+    });
+  };
+
+  return {
+    notes,
+    api: {
+      save: async (note) => {
+        const newNotes = [...notes];
+
+        let noteId = note.id ?? randomString(10);
+        if (!note.id) {
+          noteId = randomString(10);
+          newNotes.unshift({ ...note, id: noteId });
+        } else {
+          const index = newNotes.findIndex((n) => n.id === note.id);
+          newNotes.splice(index, 1, { ...note, id: noteId });
+        }
+        return updateNotes(newNotes, noteId);
+      },
+      delete: async (id) => {
+        const newNotes = [...notes];
+        const index = newNotes.findIndex((n) => n.id === id);
+        newNotes.splice(index, 1);
+        return updateNotes(newNotes, undefined);
+      },
+    },
+  };
+};
