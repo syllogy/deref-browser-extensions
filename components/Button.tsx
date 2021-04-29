@@ -44,6 +44,7 @@ export default function Button(props: Props) {
       {...props}
       onClick={onClick}
       className={classNames(
+        'select-none',
         variantClasses[props.variant ?? 'default'],
         sizeClasses[props.size ?? 'md'],
         props.className,
