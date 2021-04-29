@@ -34,8 +34,13 @@ export interface PageHandler {
   handler: (context: DerefContext) => Promise<void> | void;
 }
 
+export const getRegionCode = (): string => {
+  // TODO: Validate the result.
+  return new URL(document.URL).host.split('.')[0];
+};
+
 export const getRegion = () => {
-  const regionCode = new URL(document.URL).host.split('.')[0];
+  const regionCode = getRegionCode();
   return (regionNameMap as Record<string, string>)[regionCode] ?? null;
 };
 
