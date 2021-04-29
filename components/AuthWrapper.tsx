@@ -1,5 +1,6 @@
 import { DerefContext, postDerefMessage } from '~/page-handlers/messages';
 import React, { ReactNode } from 'react';
+import Button from '~/components/Button';
 
 interface Props {
   derefContext: DerefContext;
@@ -15,14 +16,15 @@ export default function AuthWrapper(props: Props) {
       <div className="text-center">
         <div>{msg}</div>
         <div>
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded"
-            onClick={() => {
+          <Button
+            variant="primary"
+            size="lg"
+            onClick={async () => {
               postDerefMessage({ type: 'login', payload: undefined });
             }}
           >
             Login
-          </button>
+          </Button>
         </div>
       </div>
     );
