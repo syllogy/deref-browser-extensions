@@ -34,18 +34,6 @@ export interface PageHandler {
   handler: (context: DerefContext) => Promise<void> | void;
 }
 
-export const conditionsAreMet = (conditions: ConditionFn[]): boolean =>
-  conditions.every((c) => c({ url: document.URL }));
-
-export const doPageHandler = async (
-  { conditions, handler }: PageHandler,
-  context: DerefContext,
-) => {
-  if (conditionsAreMet(conditions)) {
-    await handler(context);
-  }
-};
-
 export const getRegionCode = (): string => {
   // TODO: Validate the result.
   return new URL(document.URL).host.split('.')[0];
