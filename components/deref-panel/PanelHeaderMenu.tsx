@@ -28,7 +28,7 @@ export default function PanelHeaderMenu<
             <div
               key={i}
               className={classNames(
-                'cursor-pointer flex-grow border-b text-center h-full flex items-center justify-center font-medium pt-px text-gray-600 hover:text-black',
+                'cursor-pointer select-none flex-grow border-b text-center h-full flex items-center justify-center font-medium pt-px text-gray-600 hover:text-black',
                 {
                   'bg-white border-white': isSelected,
                   'bg-gray-100 hover:bg-gray-200 border-gray-300': !isSelected,

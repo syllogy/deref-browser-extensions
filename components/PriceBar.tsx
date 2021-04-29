@@ -5,9 +5,15 @@ import {
   PriceMessage,
   DerefMessagePayloadOf,
 } from '~/page-handlers/messages';
+import classNames from 'classnames';
 
 interface Props extends RouteComponentProps {
   price?: DerefMessagePayloadOf<PriceMessage>;
+  vertical?: boolean;
+}
+
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 export default function PriceBar(props: Props) {
@@ -17,23 +23,31 @@ export default function PriceBar(props: Props) {
     return null;
   }
 
+  const cellClass = classNames('py-2 px-3', {
+    'border-b': props.vertical,
+    'border-r': !props.vertical,
+  });
+
   return (
-    <div className="price-bar">
-      <div className="logo">
-        <img src="./deref-logo-nav-full.svg" />
-      </div>
-      <div className="main">
-        <img src="./Compute.svg" />
+    <div
+      className={classNames('rounded border border-gray-300 shadow-md flex', {
+        'flex-col': props.vertical,
+      })}
+    >
+      <div className={cellClass}>Deref</div>
+      <div className={cellClass}>
         <p>
-          <span className="instance-type">{price.type}</span>
-          <span className="lighter">instance</span>
+          <span className="mr-1 font-semibold">{price.type}</span>
+          <span className="mr-1">instance</span>
         </p>
+      </div>
+      <div className={cellClass}>
         <p>
-          <span className="currency">US$</span>
-          <span className="deref-monthly-cost">
-            {(price.hourlyCost * 730).toFixed(2)}
+          <span className="mr-1">US$</span>
+          <span className="mr-1 font-semibold">
+            {numberWithCommas((price.hourlyCost * 730).toFixed(2))}
           </span>
-          <span className="lighter">monthly</span>
+          <span className="mr-1">monthly</span>
         </p>
       </div>
     </div>

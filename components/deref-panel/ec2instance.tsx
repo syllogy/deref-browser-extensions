@@ -85,7 +85,11 @@ const menuItems: MenuItem[] = [
       if (props.price) {
         return (
           <div>
-            <PriceBar derefContext={props.derefContext} price={props.price} />
+            <PriceBar
+              derefContext={props.derefContext}
+              price={props.price}
+              vertical
+            />
           </div>
         );
       }
