@@ -30,7 +30,27 @@ interface MenuItem extends PanelHeaderMenuItem<MenuItemProps> {
 const menuItems: MenuItem[] = [
   {
     tab: 'info',
-    render: (props: MenuItemProps) => 'Info',
+    render: (props: MenuItemProps) => (
+      <>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          className="mr-2"
+        >
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        Info
+      </>
+    ),
     renderContent(props: MenuItemProps) {
       return <div>Info content</div>;
     },
@@ -38,9 +58,28 @@ const menuItems: MenuItem[] = [
   {
     tab: 'price',
     render: (props: MenuItemProps) => {
-      return `Price${
-        props.price ? ` (${(props.price.hourlyCost * 730).toFixed(2)})` : ''
-      }`;
+      return (
+        <>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            className="mr-2"
+          >
+            <line x1="12" y1="1" x2="12" y2="23"></line>
+            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+          </svg>
+          {`Price${
+            props.price ? ` (${(props.price.hourlyCost * 730).toFixed(2)})` : ''
+          }`}
+        </>
+      );
     },
     renderContent(props: MenuItemProps) {
       if (props.price) {
@@ -55,7 +94,26 @@ const menuItems: MenuItem[] = [
   },
   {
     tab: 'notes',
-    render: (props: MenuItemProps) => 'Notes',
+    render: (props: MenuItemProps) => (
+      <>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          className="mr-2"
+        >
+          <path d="M12 20h9"></path>
+          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+        </svg>
+        Notes
+      </>
+    ),
     renderContent(props: MenuItemProps) {
       return (
         <AuthWrapper derefContext={props.derefContext}>
