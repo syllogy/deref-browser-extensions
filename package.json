@@ -6,7 +6,7 @@
     "dev": "./scripts/dev.sh",
     "dev-chromium": "./scripts/dev-chromium.sh",
     "playground": "vite -c ./playground/vite.config.ts",
-    "lint": "cd ./dist && web-ext lint",
+    "lint": "eslint && cd ./dist && web-ext lint",
     "clean": "./scripts/clean.sh",
     "compile": "./scripts/compile.sh",
     "compile-css": "./scripts/compile-css.sh",

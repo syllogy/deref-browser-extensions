@@ -16,7 +16,10 @@ module.exports = {
     'plugin:import/errors',
     'plugin:import/warnings',
   ],
-  ignorePatterns: ['node_modules', '.eslintrc.js'],
+  // For some reason, having eslint try to lint the js files results in an error
+  // of the following form:
+  // Parsing error: '{' expected
+  ignorePatterns: ['node_modules', '*.js'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: ['./tsconfig.json'],

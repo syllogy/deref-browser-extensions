@@ -20,8 +20,8 @@ const getSavedEtag = async (): Promise<string | null> => {
     return await fs.promises.readFile(etagPath, {
       encoding: 'utf8',
     });
-  } catch (err) {
-    if (err.code === 'ENOENT') {
+  } catch (err: unknown) {
+    if ((err as any).code === 'ENOENT') {
       return null;
     }
     throw err;
