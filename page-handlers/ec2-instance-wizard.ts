@@ -75,6 +75,10 @@ export const ec2InstanceWizard: PageHandler = {
     ),
   ],
   async handler(context) {
+    if (window.self !== window.top) {
+      return;
+    }
+
     const instanceSearch =
       getInstanceSearchFromReviewPage() ??
       getInstanceSearchFromInstanceSelectionPage();

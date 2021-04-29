@@ -19,6 +19,7 @@ import {
   PageHandler,
   urlMatchesRegex,
   makeDerefExtensionContainer,
+  getRegionCode,
 } from './common';
 
 const getEc2Iframe = (): HTMLIFrameElement | null => {
@@ -89,6 +90,10 @@ export const ec2InstanceList: PageHandler = {
     }
   },
   async handler(context) {
+    if (window.self !== window.top) {
+      return;
+    }
+
     const instanceSearch = getInstanceSearch();
     if (!instanceSearch) {
       return;
@@ -113,7 +118,7 @@ export const ec2InstanceList: PageHandler = {
       doWarn('Cloudtrail XSRF token not found');
       return;
     }
-    const region = getRegion();
+    const region = getRegionCode();
     let lastUpdatedAt: null | Date = null;
     for await (const event of getCloudTrailEvents({
       region,
