@@ -1,7 +1,7 @@
 import { ExtensionApi } from '~/lib/extension-api/api';
 import { Auth0Client, User } from '@auth0/auth0-spa-js';
 import { AuthenticatedUser } from '~/lib/extension-api/messages';
-import { arnToUrl } from '~/lib/navigation';
+import { arnToWebUrl } from '@deref/arn2web';
 
 interface InitBackgroundScriptConfig {
   extensionApi: ExtensionApi;
@@ -51,7 +51,7 @@ const initBackgroundScript = ({
     if (!text.startsWith('arn:')) {
       return;
     }
-    const url = arnToUrl(text);
+    const url = arnToWebUrl(text);
     if (!url) {
       // TODO: Somehow report failure to the user.
       return;
