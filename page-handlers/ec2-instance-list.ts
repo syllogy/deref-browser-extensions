@@ -20,6 +20,7 @@ import {
   urlMatchesRegex,
   makeDerefExtensionContainer,
   getRegionCode,
+  isNotIframe,
 } from './common';
 
 const getEc2Iframe = (): HTMLIFrameElement | null => {
@@ -101,6 +102,7 @@ const getDerefContainer = async (
 
 export const ec2InstanceList: PageHandler = {
   conditions: [
+    isNotIframe,
     urlMatchesRegex(/.*console.aws.amazon.com\/ec2\/v2\/home?.*#Instances:/),
   ],
   navContextUpdater: (prevNavContext) => {
@@ -125,10 +127,6 @@ export const ec2InstanceList: PageHandler = {
     }
   },
   async handler(context) {
-    if (window.self !== window.top) {
-      return;
-    }
-
     const instanceSearch = getInstanceSearch();
     if (!instanceSearch) {
       return;

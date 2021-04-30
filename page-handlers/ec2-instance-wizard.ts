@@ -17,6 +17,7 @@ import {
   PageHandler,
   urlMatchesRegex,
   makeDerefExtensionContainer,
+  isNotIframe,
 } from './common';
 
 const getEc2Iframe = (): HTMLIFrameElement | null => {
@@ -70,15 +71,12 @@ const getDerefContainer = async (context: DerefContext) => {
 
 export const ec2InstanceWizard: PageHandler = {
   conditions: [
+    isNotIframe,
     urlMatchesRegex(
       /.*console.aws.amazon.com\/ec2\/v2\/home?.*#LaunchInstanceWizard:/,
     ),
   ],
   async handler(context) {
-    if (window.self !== window.top) {
-      return;
-    }
-
     const instanceSearch =
       getInstanceSearchFromReviewPage() ??
       getInstanceSearchFromInstanceSelectionPage();
