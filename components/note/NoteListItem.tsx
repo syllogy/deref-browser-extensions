@@ -27,7 +27,7 @@ export default function NoteListItem(props: Props) {
           saveOnBlur={true}
         />
       ) : (
-        <div className="flex py-2">
+        <div className="flex py-2 group">
           <div
             className={classNames('flex-grow', 'whitespace-pre-wrap', {
               'cursor-pointer': !!props.api,
@@ -37,7 +37,7 @@ export default function NoteListItem(props: Props) {
             {props.note.content}
           </div>
           {props.api && (
-            <div>
+            <div className="opacity-0 group-hover:opacity-100 duration-200">
               <Button
                 size="sm"
                 onClick={async () => props.api?.delete(props.note.id)}
