@@ -6,7 +6,11 @@ import {
 } from './common';
 
 export const derefButton: PageHandler = {
-  conditions: [isNotIframe, urlMatchesRegex(/.*console.aws.amazon.com/)],
+  conditions: [
+    isNotIframe,
+    urlMatchesRegex(/.*console.aws.amazon.com/),
+    () => false, // Temporarily disable the button.
+  ],
   async handler(context) {
     void makeDerefExtensionContainer({
       routeKey: 'button',
