@@ -2,15 +2,12 @@ import {
   PageHandler,
   urlMatchesRegex,
   makeDerefExtensionContainer,
+  isNotIframe,
 } from './common';
 
 export const derefButton: PageHandler = {
-  conditions: [urlMatchesRegex(/.*console.aws.amazon.com/)],
+  conditions: [isNotIframe, urlMatchesRegex(/.*console.aws.amazon.com/)],
   async handler(context) {
-    if (window.self !== window.top) {
-      return;
-    }
-
     void makeDerefExtensionContainer({
       routeKey: 'button',
       context,
