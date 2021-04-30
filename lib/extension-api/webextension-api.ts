@@ -17,8 +17,9 @@ const webextensionApi: ExtensionApi = {
     listener: ExtensionMessageListener<TMessage, TType>,
   ) => {
     browser.runtime.onMessage.addListener((message: ExtensionMessage, s) => {
+      const tabId = s.tab?.id;
       if (message.type === type) {
-        return listener(message.payload as any);
+        return listener(message.payload as any, tabId ? { tabId } : undefined);
       }
     });
   },

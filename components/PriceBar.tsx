@@ -1,4 +1,5 @@
 import React from 'react';
+import TimeAgo from 'react-timeago';
 import { RouteComponentProps } from '~/components/routes';
 import {
   useWindowMessageListener,
@@ -26,15 +27,21 @@ export default function PriceBar(props: Props) {
         <img src="./Compute.svg" />
         <p>
           <span className="instance-type">{price.type}</span>
-          <span className="lighter">instance</span>
+          <span className="lighter"> instance</span>
         </p>
         <p>
           <span className="currency">US$</span>
           <span className="deref-monthly-cost">
             {(price.hourlyCost * 730).toFixed(2)}
           </span>
-          <span className="lighter">monthly</span>
+          <span className="lighter"> monthly</span>
         </p>
+        {price.lastUpdated ? (
+          <p>
+            {price.lastUpdated.by}{' '}
+            <TimeAgo className="lighter" date={price.lastUpdated.at} />
+          </p>
+        ) : null}
       </div>
     </div>
   );

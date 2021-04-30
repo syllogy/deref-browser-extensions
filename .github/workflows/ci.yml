@@ -1,6 +1,6 @@
 ---
 name: ci
-on: [push, pull_request]
+on: [push]
 jobs:
   build_extension:
     name: "Build extension"
@@ -11,7 +11,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Install dependencies
-        run: 'npm install'
+        run: 'npm ci'
       - name: Compile
         run: 'npm run compile'
       - name: Lint

@@ -17,7 +17,8 @@
   "content_scripts": [
     {
       "matches": ["*://*.aws.amazon.com/*"],
-      "js": ["./src/index.js"]
+      "js": ["./src/index.js"],
+      "all_frames": true
     }
   ],
   "background": {
@@ -29,5 +30,12 @@
       "id": "awsenhancementsuite@deref.io"
     }
   },
-  "permissions": ["identity", "https://*.auth0.com/", "https://*.deref.io/"]
+  "permissions": [
+    "identity",
+    "webRequest",
+    "webRequestBlocking",
+    "https://*.auth0.com/",
+    "https://*.deref.io/",
+    "*://*.aws.amazon.com/*"
+  ]
 }

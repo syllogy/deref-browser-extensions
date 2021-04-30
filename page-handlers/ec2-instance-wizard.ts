@@ -75,6 +75,10 @@ export const ec2InstanceWizard: PageHandler = {
     ),
   ],
   async handler(context) {
+    if (window.self !== window.top) {
+      return;
+    }
+
     const instanceSearch =
       getInstanceSearchFromReviewPage() ??
       getInstanceSearchFromInstanceSelectionPage();
@@ -93,6 +97,7 @@ export const ec2InstanceWizard: PageHandler = {
       const payload: DerefMessagePayloadOf<PriceMessage> = {
         hourlyCost: hourlyPrice,
         type: instanceSearch.instanceType,
+        lastUpdated: null,
       };
 
       broadcastMessageToIframes({ type: 'price', payload });
