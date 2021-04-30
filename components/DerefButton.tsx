@@ -2,13 +2,14 @@ import React from 'react';
 import { RouteComponentProps } from '~/components/routes';
 import { postDerefMessage } from '~/page-handlers/messages';
 import classNames from 'classnames';
+import Caret from './generic/Caret';
 
 export default function DerefButton(props: RouteComponentProps) {
   return (
-    <div className="h-full flex items-center ">
+    <div className="h-full flex items-center">
       <div
         className={classNames(
-          'h-full pl-4 pr-3 fill-current flex items-center select-none cursor-pointer font-medium',
+          'h-full px-4 fill-current flex items-center select-none cursor-pointer font-medium',
           {
             'border-gray-600 bg-gray-900 hover:bg-gray-800 border-l text-white pb-px': !props
               .derefContext.panelState.visible,
@@ -25,6 +26,7 @@ export default function DerefButton(props: RouteComponentProps) {
           width={72}
           height={14}
           viewBox="0 0 154 32"
+          className="mr-2"
         >
           <path d="M20,0a1.839,1.839,0,0,0-2,1.8V10H6a6,6,0,0,0-6,6V26a6,6,0,0,0,6,6H20a2,2,0,0,0,2-2V1.8A1.839,1.839,0,0,0,20,0ZM18,28H6a2,2,0,0,1-2-2V16a2,2,0,0,1,2-2H18Z" />
           <path d="M43,10H33a6,6,0,0,0-6,6V26a6,6,0,0,0,6,6H43a2,2,0,0,0,0-4H33a2,2,0,0,1-2-2V23H47a2,2,0,0,0,2-2V16A6,6,0,0,0,43,10Zm2,9H31V16a2,2,0,0,1,2-2H43a2,2,0,0,1,2,2Z" />
@@ -34,6 +36,7 @@ export default function DerefButton(props: RouteComponentProps) {
           <path d="M140,17a2,2,0,0,0-2-2H124a2,2,0,0,0,0,4h14A2,2,0,0,0,140,17Z" />
           <path d="M152.728,15.586l-1.414-1.414-9.9-9.9A2,2,0,0,0,138.586,7.1l9.9,9.9-9.9,9.9a2,2,0,0,0,2.828,2.829l9.9-9.9,1.414-1.414A2,2,0,0,0,152.728,15.586Z" />
         </svg>
+        <Caret angle={props.derefContext.panelState.visible ? 180 : 0} />
       </div>
     </div>
   );
