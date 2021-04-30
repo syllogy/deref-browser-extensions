@@ -13,9 +13,9 @@ import PanelHeaderMenu, {
 } from '~/components/deref-panel/PanelHeaderMenu';
 import PriceBar from '~/components/PriceBar';
 import AuthWrapper from '~/components/AuthWrapper';
-import NoteListEditor from '~/components/note/NoteListEditor';
 import { Note, NoteApi } from '~/components/note/types';
 import { randomString } from '~/lib/util/string';
+import NoteTextArea from '~/components/note/NoteTextArea';
 
 interface MenuItemProps {
   derefContext: DerefContext;
@@ -116,7 +116,7 @@ export function Ec2InstanceContent(
 function MockNoteListEditor() {
   const { notes, api } = useMockNotesApi();
 
-  return <NoteListEditor notes={notes} api={api} />;
+  return <NoteTextArea note={notes[0]} onSave={api.save} className="h-full" />;
 }
 
 interface MockNotesApiHook {
@@ -128,7 +128,7 @@ const useMockNotesApi = (): MockNotesApiHook => {
   const [notes, setNotes] = useState<Note[]>(() => {
     const notes: Note[] = [];
     for (let i = 0; i < 20; i++) {
-      notes.push({ id: randomString(10), content: `Lorem ipsum note ${i}` });
+      notes.push({ id: randomString(10), body: `Lorem ipsum note ${i}` });
     }
     return notes;
   });
@@ -159,12 +159,6 @@ const useMockNotesApi = (): MockNotesApiHook => {
           const index = newNotes.findIndex((n) => n.id === note.id);
           newNotes.splice(index, 1, { ...note, id: noteId });
         }
-        return updateNotes(newNotes, noteId);
-      },
-      delete: async (id) => {
-        const newNotes = [...notes];
-        const index = newNotes.findIndex((n) => n.id === id);
-        newNotes.splice(index, 1);
         return updateNotes(newNotes, undefined);
       },
     },
