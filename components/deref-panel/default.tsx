@@ -2,6 +2,7 @@ import React from 'react';
 import { PanelComponentProps } from '~/components/deref-panel/types';
 import { postDerefMessage } from '~/page-handlers/messages';
 import Button from '~/components/Button';
+import UserIcon from '../svg/UserIcon';
 
 export function DefaultHeader(props: PanelComponentProps<any>) {
   return (
@@ -19,8 +20,9 @@ export function DefaultFooter({ derefContext }: PanelComponentProps<any>) {
   if (derefContext.user) {
     return (
       <div className="flex items-center">
-        <div className="flex-grow font-medium text-xs">
-          👤 {derefContext.user.email}
+        <div className="flex-grow flex items-center font-medium text-xs">
+          <UserIcon width={16} height={16} className="mr-2" />
+          {derefContext.user.email}
         </div>
         <Button
           size="sm"

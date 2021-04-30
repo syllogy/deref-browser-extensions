@@ -16,6 +16,9 @@ import AuthWrapper from '~/components/AuthWrapper';
 import NoteListEditor from '~/components/note/NoteListEditor';
 import { Note, NoteApi } from '~/components/note/types';
 import { randomString } from '~/lib/util/string';
+import NotesIcon from '~/components/svg/NotesIcon';
+import PriceIcon from '~/components/svg/PriceIcon';
+import InfoIcon from '~/components/svg/InfoIcon';
 
 interface MenuItemProps {
   derefContext: DerefContext;
@@ -32,22 +35,7 @@ const menuItems: MenuItem[] = [
     tab: 'info',
     render: (props: MenuItemProps) => (
       <>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          className="mr-2"
-        >
-          <circle cx="12" cy="12" r="10"></circle>
-          <line x1="12" y1="16" x2="12" y2="12"></line>
-          <line x1="12" y1="8" x2="12.01" y2="8"></line>
-        </svg>
+        <InfoIcon height={16} width={16} className="mr-2" />
         Info
       </>
     ),
@@ -60,21 +48,7 @@ const menuItems: MenuItem[] = [
     render: (props: MenuItemProps) => {
       return (
         <>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            className="mr-2"
-          >
-            <line x1="12" y1="1" x2="12" y2="23"></line>
-            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-          </svg>
+          <PriceIcon height={16} width={16} className="mr-2" />
           Price{' '}
           {props.price ? (
             <span className="ml-1 text-xs text-gray-400 mt-1">
@@ -105,21 +79,7 @@ const menuItems: MenuItem[] = [
     tab: 'notes',
     render: (props: MenuItemProps) => (
       <>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          className="mr-2"
-        >
-          <path d="M12 20h9"></path>
-          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-        </svg>
+        <NotesIcon height={16} width={16} className="mr-2" />
         Notes
       </>
     ),
