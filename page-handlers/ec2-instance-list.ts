@@ -81,7 +81,6 @@ const getLastUpdatedInfo = async (): Promise<null | {
     lookupValue: instanceId,
     xsrfToken,
   })) {
-    console.log('event', event);
     lastUpdated =
       !lastUpdated || lastUpdated.at.getTime() < event.eventTime
         ? { at: new Date(event.eventTime), by: event.username }
