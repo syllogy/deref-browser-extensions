@@ -24,4 +24,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: build
-          path: ./dist/web-ext-artifacts/*.zip
+          path: ./dist/web-ext-artifacts/
