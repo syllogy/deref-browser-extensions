@@ -27,7 +27,7 @@
   "web_accessible_resources": ["assets/*", "src/iframe-index.js"],
   "browser_specific_settings": {
     "gecko": {
-      "id": "awsenhancementsuite@deref.io"
+      "id": "{9070f321-2f8b-4c77-b0ae-88494e426806}"
     }
   },
   "permissions": [
