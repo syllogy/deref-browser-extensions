@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Iframe from '~/playground/components/Iframe';
 import { getRouteKeys } from '~/components/routes';
 import MessagePoster from '~/playground/components/MessagePoster';
-import { DerefContext, useWindowMessageListener } from '~/page-handlers/messages';
+import { DerefContext } from '~/page-handlers/messages';
 import initBackgroundScript from '~/init-background-script';
 import mockextensionApi from '~/lib/extension-api/mockextension-api';
 import createAuth0Client from '@auth0/auth0-spa-js';
 import initContentScript from '~/init-content-script';
-import { useApolloClient } from '~/page-handlers/api';
-import { MyNotesDocument } from '~/graphql/types';
 
 const playgroundUrl = 'http://localhost:3000';
 
@@ -38,7 +36,6 @@ initBackgroundScript({
     });
   },
 });
-
 
 export default function Playground() {
   const [derefContext, setDerefContext] = useState<DerefContext>();

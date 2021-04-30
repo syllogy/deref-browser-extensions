@@ -1,9 +1,9 @@
-import React, { createElement } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import { useWindowMessageListener } from '~/page-handlers/messages';
 import { isDefined, Dict } from '~/lib/types';
 import { doWarn } from '~/logging';
-import { Route, getRouteMaybe } from '~/components/routes';
+import { getRouteMaybe } from '~/components/routes';
+import Iframe from '~/components/Iframe';
 
 type ParsedQuery = Dict<string>;
 
@@ -40,18 +40,6 @@ const resolveRoute = () => {
 
   return route;
 };
-
-interface IframeProps {
-  route: Route;
-}
-
-function Iframe<TProps>(props: IframeProps) {
-  const derefContext = useWindowMessageListener('init');
-  if (!derefContext) {
-    return null;
-  }
-  return createElement(props.route.component, { derefContext });
-}
 
 const route = resolveRoute();
 if (route) {

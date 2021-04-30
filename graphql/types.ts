@@ -43,11 +43,17 @@ export type Query = {
   __typename?: 'Query';
   resourceNote?: Maybe<Note>;
   myNotes: Array<Note>;
+  arnToAwsConsoleUrl?: Maybe<Scalars['String']>;
 };
 
 
 export type QueryResourceNoteArgs = {
   arn?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryArnToAwsConsoleUrlArgs = {
+  arn: Scalars['String'];
 };
 
 export type SaveNoteForResourceInput = {
@@ -56,16 +62,40 @@ export type SaveNoteForResourceInput = {
 };
 
 
-export type MyNotesQueryVariables = Exact<{ [key: string]: never; }>;
+export type ResourceNoteQueryVariables = Exact<{
+  arn: Scalars['String'];
+}>;
 
 
-export type MyNotesQuery = (
+export type ResourceNoteQuery = (
   { __typename?: 'Query' }
-  & { myNotes: Array<(
+  & { resourceNote?: Maybe<(
+    { __typename?: 'Note' }
+    & Pick<Note, 'id' | 'body'>
+  )> }
+);
+
+export type SaveResourceNoteMutationVariables = Exact<{
+  input: SaveNoteForResourceInput;
+}>;
+
+
+export type SaveResourceNoteMutation = (
+  { __typename?: 'Mutation' }
+  & { saveNoteForResource?: Maybe<(
     { __typename?: 'Note' }
     & Pick<Note, 'id' | 'body'>
   )> }
 );
 
 
-export const MyNotesDocument: DocumentNode<MyNotesQuery, MyNotesQueryVariables> = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"MyNotes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"myNotes"},"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"body"}}]}}]}}]};
+export const ResourceNoteDocument: DocumentNode<ResourceNoteQuery, ResourceNoteQueryVariables> = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"query","name":{"kind":"Name","value":"ResourceNote"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"arn"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"String"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"resourceNote"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"arn"},"value":{"kind":"Variable","name":{"kind":"Name","value":"arn"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"body"}}]}}]}}]};
+export const SaveResourceNoteDocument: DocumentNode<SaveResourceNoteMutation, SaveResourceNoteMutationVariables> = {"kind":"Document","definitions":[{"kind":"OperationDefinition","operation":"mutation","name":{"kind":"Name","value":"SaveResourceNote"},"variableDefinitions":[{"kind":"VariableDefinition","variable":{"kind":"Variable","name":{"kind":"Name","value":"input"}},"type":{"kind":"NonNullType","type":{"kind":"NamedType","name":{"kind":"Name","value":"SaveNoteForResourceInput"}}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"saveNoteForResource"},"arguments":[{"kind":"Argument","name":{"kind":"Name","value":"note"},"value":{"kind":"Variable","name":{"kind":"Name","value":"input"}}}],"selectionSet":{"kind":"SelectionSet","selections":[{"kind":"Field","name":{"kind":"Name","value":"id"}},{"kind":"Field","name":{"kind":"Name","value":"body"}}]}}]}}]};
+export const namedOperations = {
+  Query: {
+    ResourceNote: 'ResourceNote'
+  },
+  Mutation: {
+    SaveResourceNote: 'SaveResourceNote'
+  }
+}

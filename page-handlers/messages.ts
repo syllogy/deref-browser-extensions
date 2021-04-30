@@ -39,10 +39,6 @@ export interface InitMessage extends BaseMessage<DerefContext> {
   type: 'init';
 }
 
-export interface UpdateApiTokenMessage extends BaseMessage<string | null> {
-  type: 'updateApiToken';
-}
-
 export interface TokenMessage extends BaseMessage<{ token: string }> {
   type: 'token';
 }
@@ -87,7 +83,6 @@ export interface LogoutMessage extends BaseMessage<void> {
 
 export type DerefMessage =
   | InitMessage
-  | UpdateApiTokenMessage
   | PriceMessage
   | TogglePanelMessage
   | TogglePanelExpandMessage

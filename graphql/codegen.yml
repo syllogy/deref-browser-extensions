@@ -7,3 +7,4 @@ generates:
       - typescript
       - typescript-operations
       - typed-document-node
+      - named-operations-object

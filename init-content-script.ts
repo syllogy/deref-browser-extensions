@@ -26,7 +26,6 @@ const initContentScript = async ({
   ...config
 }: InitContentScriptConfig): Promise<InitContentScriptResult> => {
   const user = await extensionApi.sendMessage('init', undefined);
-  broadcastMessageToIframes({ type: 'updateApiToken', payload: user?.apiToken ?? null });
 
   let derefContext: DerefContext = {
     user,
@@ -37,23 +36,13 @@ const initContentScript = async ({
     navContext: null,
   };
 
-  const handleChange = (prev: DerefContext, context: DerefContext) => {
-    // Instead of broadcasting an event, would it be better to create a hook that updates state
-    // whenever a particular key or path in the context changes?
-    if (prev.user?.apiToken !== context.user?.apiToken) {
-      broadcastMessageToIframes({ type: 'updateApiToken', payload: context.user?.apiToken ?? null });
-    }
-  }
-
   const updateDerefContext = (context: Partial<DerefContext>) => {
-    const prevContext = derefContext;
     derefContext = {
       ...derefContext,
       ...context,
     };
 
     broadcastMessageToIframes({ type: 'init', payload: derefContext });
-    handleChange(prevContext, derefContext);
 
     config.onUpdateDerefContext(derefContext);
   };

@@ -123,7 +123,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['*.js'],
+      files: ['*.js', '*.ts', '*.tsx'],
       rules: {
         'react/react-in-jsx-scope': 'error', // We don't want automatic import magic.
         'react-hooks/rules-of-hooks': 'error', // Checks rules of Hooks

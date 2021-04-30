@@ -1,4 +1,10 @@
-import React, { ReactNode, useRef, useCallback, useState } from 'react';
+import React, {
+  ReactNode,
+  useRef,
+  useCallback,
+  useState,
+  useEffect,
+} from 'react';
 import { Note, NoteApi } from '~/components/note/types';
 import classNames from 'classnames';
 import { debounce } from 'debounce';
@@ -77,6 +83,7 @@ export default function NoteTextArea(props: Props) {
     focus: () => textAreaRef.current?.focus(),
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- Using debounce.
   const onKeyDown = useCallback(
     debounce((e: React.KeyboardEvent) => {
       void controlProps.save();
