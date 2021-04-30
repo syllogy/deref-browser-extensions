@@ -70,7 +70,7 @@ export default function DerefPanel(props: RouteComponentProps) {
       </div>
       {renderedContent && props.derefContext.panelState.expanded && (
         <>
-          <div className="flex-grow p-2 overflow-auto">{renderedContent}</div>
+          <div className="flex-grow overflow-auto">{renderedContent}</div>
           <div className="border-t p-2">
             {createElement(
               content.footer ?? defaultContent.footer,

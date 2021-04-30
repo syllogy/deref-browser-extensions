@@ -1,14 +1,13 @@
 export interface Note {
   id: string;
-  content: string;
+  body: string;
 }
 
 export interface SavableNote {
   id?: string;
-  content: string;
+  body: string;
 }
 
 export interface NoteApi {
-  save: (note: SavableNote) => Promise<string>;
-  delete: (id: string) => Promise<void>;
+  save: (note: SavableNote) => Promise<void>;
 }
