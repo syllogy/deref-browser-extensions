@@ -16,7 +16,12 @@ jobs:
         run: 'npm run compile'
       - name: Lint
         run: 'npm run lint'
-      - name: Build extension
-        run: 'npm run build'
       - name: Check types
         run: 'npx tsc --noEmit'
+      - name: Build extension
+        run: 'npm run build'
+      - name: Upload build
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: ./dist/web-ext-artifacts/*.zip
