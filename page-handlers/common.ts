@@ -26,6 +26,9 @@ export const urlMatchesRegex = (url: RegExp): ConditionFn => {
   };
 };
 
+export const isIframe = () => window.top !== window.self;
+export const isNotIframe = () => window.top === window.self;
+
 export interface PageHandler {
   conditions: ConditionFn[];
   navContextUpdater?: (
