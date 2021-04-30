@@ -43,6 +43,10 @@ export interface UpdateApiTokenMessage extends BaseMessage<string | null> {
   type: 'updateApiToken';
 }
 
+export interface TokenMessage extends BaseMessage<{ token: string }> {
+  type: 'token';
+}
+
 export interface PriceMessage
   extends BaseMessage<{
     type: string;
@@ -89,7 +93,8 @@ export type DerefMessage =
   | TogglePanelExpandMessage
   | UpdateNavContextMessage
   | LoginMessage
-  | LogoutMessage;
+  | LogoutMessage
+  | TokenMessage;
 
 export type DerefMessageType<TMessage extends DerefMessage> = TMessage['type'];
 
