@@ -7,13 +7,13 @@ import UserIcon from '../svg/UserIcon';
 export function DefaultHeader(props: PanelComponentProps<any>) {
   return (
     <div className="flex h-full items-center pb-1 px-3 font-semibold">
-      Header
+      Deref: AWS Enhancement Suite
     </div>
   );
 }
 
 export function DefaultContent(props: PanelComponentProps<any>) {
-  return <div>Content</div>;
+  return <div>Please select an EC2 Instance.</div>;
 }
 
 export function DefaultFooter({ derefContext }: PanelComponentProps<any>) {
