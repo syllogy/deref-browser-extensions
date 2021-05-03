@@ -2,16 +2,18 @@ import React, { ReactNode, ButtonHTMLAttributes, useState } from 'react';
 import classNames from 'classnames';
 
 const sizeClasses = {
-  sm: 'py-0 px-2',
-  md: 'py-1 px-3',
-  lg: 'py-2 px-4',
+  sm: 'py-1 px-2 text-xs',
+  md: 'py-1 px-3 text-sm',
+  lg: 'py-2 px-6 text-base',
 };
 
 type Size = keyof typeof sizeClasses;
 
 const variantClasses = {
-  default: 'rounded bg-gray-100 hover:bg-gray-700 text-black',
-  primary: 'rounded bg-blue-500 hover:bg-blue-700 text-white',
+  default:
+    'rounded hover:bg-gray-100 border border-b-2 border-gray-200 hover:border-gray-300 text-black',
+  primary:
+    'rounded bg-blue-500 hover:bg-blue-600 border border-b-2 border-blue-700 hover:border-blue-900 text-white',
 };
 
 type Variant = keyof typeof variantClasses;
@@ -42,6 +44,7 @@ export default function Button(props: Props) {
       {...props}
       onClick={onClick}
       className={classNames(
+        'select-none',
         variantClasses[props.variant ?? 'default'],
         sizeClasses[props.size ?? 'md'],
         props.className,

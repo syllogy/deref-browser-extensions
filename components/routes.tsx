@@ -22,39 +22,38 @@ const createRoute = (route: Route) => route;
 
 export const DEREF_PANEL_SETTINGS = {
   offsetTop: 41,
-  foldedHeight: 48,
+  foldedHeight: 40,
   offsetBottom: 35,
 };
 
 const routes = {
   panel: createRoute({
     component: DerefPanel,
-    style: (context) => ({
+    style: context => ({
       position: 'fixed',
       top: `${DEREF_PANEL_SETTINGS.offsetTop}px`,
       right: '0',
-      width: '300px',
+      width: '360px',
       zIndex: '100',
       display: context.panelState.visible ? 'block' : 'none',
       height: context.panelState.expanded
-        ? `calc(100vh - ${
-            DEREF_PANEL_SETTINGS.offsetTop + DEREF_PANEL_SETTINGS.offsetBottom
-          }px)`
+        ? `calc(100vh - ${DEREF_PANEL_SETTINGS.offsetTop +
+            DEREF_PANEL_SETTINGS.offsetBottom}px)`
         : `${DEREF_PANEL_SETTINGS.foldedHeight}px`,
     }),
   }),
   button: createRoute({
     component: DerefButton,
-    style: (context) => ({
+    style: context => ({
       height: '36px',
-      width: '60px',
+      width: '128px',
     }),
   }),
   priceBar: createRoute({
     component: PriceBar,
-    style: (context) => ({
-      height: '33px',
-      minWidth: '550px',
+    style: context => ({
+      height: '48px',
+      minWidth: '720px',
     }),
   }),
 };

@@ -19,6 +19,9 @@ import {
 } from '~/graphql/types';
 import { useQuery, useMutation } from '@apollo/client';
 import { createQueryContainer } from '~/components/QueryContainer';
+import NotesIcon from '~/components/svg/NotesIcon';
+import PriceIcon from '~/components/svg/PriceIcon';
+import InfoIcon from '~/components/svg/InfoIcon';
 
 interface MenuItemProps extends PanelComponentProps<Ec2InstanceNavContext> {
   price: DerefMessagePayloadOf<PriceMessage> | null;
@@ -32,7 +35,12 @@ interface MenuItem extends PanelHeaderMenuItem<MenuItemProps> {
 const menuItems: MenuItem[] = [
   {
     tab: 'info',
-    render: (props: MenuItemProps) => 'Info',
+    render: (props: MenuItemProps) => (
+      <>
+        <InfoIcon height={16} width={16} className="mr-2" />
+        Info
+      </>
+    ),
     renderContent(props: MenuItemProps) {
       return <div>Info content</div>;
     },
@@ -40,15 +48,22 @@ const menuItems: MenuItem[] = [
   {
     tab: 'price',
     render: (props: MenuItemProps) => {
-      return `Price${
-        props.price ? ` (${(props.price.hourlyCost * 730).toFixed(2)})` : ''
-      }`;
+      return (
+        <>
+          <PriceIcon height={16} width={16} className="mr-2" />
+          Price
+        </>
+      );
     },
     renderContent(props: MenuItemProps) {
       if (props.price) {
         return (
           <div>
-            <PriceBar derefContext={props.derefContext} price={props.price} />
+            <PriceBar
+              derefContext={props.derefContext}
+              price={props.price}
+              vertical
+            />
           </div>
         );
       }
@@ -57,7 +72,12 @@ const menuItems: MenuItem[] = [
   },
   {
     tab: 'notes',
-    render: (props: MenuItemProps) => 'Notes',
+    render: (props: MenuItemProps) => (
+      <>
+        <NotesIcon height={16} width={16} className="mr-2" />
+        Notes
+      </>
+    ),
     renderContent(props: MenuItemProps) {
       return (
         <AuthWrapper derefContext={props.derefContext}>

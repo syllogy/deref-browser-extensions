@@ -64,13 +64,21 @@ export default function DerefPanel(props: RouteComponentProps) {
   }, [renderedContent, props.derefContext]);
 
   return (
-    <div className="flex flex-col h-full border-l bg-white">
-      <div style={{ height: DEREF_PANEL_SETTINGS.foldedHeight }}>
+    <div
+      className="flex flex-col h-full border-l border-gray-300 bg-white ml-2 shadow-md"
+      style={{ fontSize: 14 }}
+    >
+      <div
+        style={{ height: DEREF_PANEL_SETTINGS.foldedHeight }}
+        className="relative flex-none"
+      >
         {createElement(content.header, componentProps)}
       </div>
-      {renderedContent && props.derefContext.panelState.expanded && (
+      {renderedContent && props.derefContext.panelState.expanded ? (
         <>
-          <div className="flex-grow overflow-auto">{renderedContent}</div>
+          <div className="flex-grow px-3 py-4 overflow-auto">
+            {renderedContent}
+          </div>
           <div className="border-t p-2">
             {createElement(
               content.footer ?? defaultContent.footer,
@@ -78,6 +86,8 @@ export default function DerefPanel(props: RouteComponentProps) {
             )}
           </div>
         </>
+      ) : (
+        <div className="h-px bg-gray-300 relative" style={{ marginTop: -1 }} />
       )}
     </div>
   );

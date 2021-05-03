@@ -55,7 +55,7 @@ const messages: Message[] = [
       type: 'price',
       payload: {
         type: 't4g.micro',
-        hourlyCost: Math.random() * 1000,
+        hourlyCost: Math.random() * 10,
         lastUpdated: { at: new Date(), by: 'a-very-real-user' },
       },
     }),

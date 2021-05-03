@@ -14,7 +14,7 @@ export default function AuthWrapper(props: Props) {
   if (!props.derefContext.user) {
     return (
       <div className="text-center">
-        <div>{msg}</div>
+        <div className="mb-4 mt-2">{msg}</div>
         <div>
           <Button
             variant="primary"

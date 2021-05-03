@@ -4,7 +4,7 @@ body {
   --deref-dark: rgb(30, 32, 35);
   color: var(--deref-dark);
   font-family: -apple-system, BlinkMacSystemFont, Inter, Segoe UI, Roboto,
-  Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   margin: 0;
   width: 100%;
   height: 100%;
@@ -17,7 +17,7 @@ body {
 }
 
 body {
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .deref-panel {
@@ -46,25 +46,6 @@ body {
 .deref-panel .footer {
   padding: 10px;
   text-align: right;
-}
-
-.deref-button {
-  display: flex;
-  align-items: stretch;
-  width: 100%;
-  height: 100%;
-}
-
-.deref-button .deref-btn {
-  margin: 4px 0 4px 0;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: var(--deref-dark);
-  color: white;
-  border: 1px solid #888888;
-  cursor: pointer;
 }
 
 .price-bar {
@@ -106,4 +87,20 @@ body {
 
 .price-bar .currency {
   color: #00a508;
+}
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  margin: 4px;
+  position: relative;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(96, 96, 96, 0.25);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(96, 96, 96, 0.5);
 }
