@@ -6,6 +6,7 @@ export interface ExtensionBaseMessage<TPayload, TReturn> {
 
 export interface AuthenticatedUser {
   email: string;
+  apiToken: string;
 }
 
 export interface ExtensionInitMessage

@@ -8,6 +8,21 @@ interface Message {
   msg: () => DerefMessage;
 }
 
+const createEc2InstanceNavContextMessage = (instanceId: string): Message => ({
+  title: `navContext:ec2Instance:${instanceId}`,
+  msg: () => ({
+    type: 'updateNavContext',
+    payload: {
+      navContext: {
+        type: 'ec2Instance',
+        data: {
+          instanceId: `instance-${instanceId}`,
+        },
+      },
+    },
+  }),
+});
+
 const messages: Message[] = [
   {
     msg: () => ({
@@ -30,20 +45,11 @@ const messages: Message[] = [
       },
     }),
   },
-  {
-    title: 'navContext:ec2Instance',
-    msg: () => ({
-      type: 'updateNavContext',
-      payload: {
-        navContext: {
-          type: 'ec2Instance',
-          data: {
-            instanceId: 'instance-123456789',
-          },
-        },
-      },
-    }),
-  },
+  createEc2InstanceNavContextMessage('1'),
+  createEc2InstanceNavContextMessage('2'),
+  createEc2InstanceNavContextMessage('3'),
+  createEc2InstanceNavContextMessage('4'),
+  createEc2InstanceNavContextMessage('5'),
   {
     msg: () => ({
       type: 'price',

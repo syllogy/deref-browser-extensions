@@ -62,5 +62,10 @@ export const renderPanelHeaderMenuContent = <
   if (!selected) {
     return null;
   }
-  return selected.renderContent(props.itemProps) ?? null;
+  const content = selected.renderContent(props.itemProps);
+  if (!content) {
+    return null;
+  }
+
+  return <>{content}</>;
 };

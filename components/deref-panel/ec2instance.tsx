@@ -1,11 +1,10 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode } from 'react';
 import { PanelComponentProps } from '~/components/deref-panel/types';
 import {
   Ec2InstanceNavContext,
   useWindowMessageListener,
   DerefMessagePayloadOf,
   PriceMessage,
-  DerefContext,
 } from '~/page-handlers/messages';
 import PanelHeaderMenu, {
   PanelHeaderMenuItem,
@@ -13,12 +12,15 @@ import PanelHeaderMenu, {
 } from '~/components/deref-panel/PanelHeaderMenu';
 import PriceBar from '~/components/PriceBar';
 import AuthWrapper from '~/components/AuthWrapper';
-import { Note, NoteApi } from '~/components/note/types';
-import { randomString } from '~/lib/util/string';
 import NoteTextArea from '~/components/note/NoteTextArea';
+import {
+  ResourceNoteDocument,
+  SaveResourceNoteDocument,
+} from '~/graphql/types';
+import { useQuery, useMutation } from '@apollo/client';
+import { createQueryContainer } from '~/components/QueryContainer';
 
-interface MenuItemProps {
-  derefContext: DerefContext;
+interface MenuItemProps extends PanelComponentProps<Ec2InstanceNavContext> {
   price: DerefMessagePayloadOf<PriceMessage> | null;
 }
 
@@ -59,7 +61,7 @@ const menuItems: MenuItem[] = [
     renderContent(props: MenuItemProps) {
       return (
         <AuthWrapper derefContext={props.derefContext}>
-          <MockNoteListEditor />
+          <NoteContainer {...props} />
         </AuthWrapper>
       );
     },
@@ -75,7 +77,7 @@ const useItemProps = (
 ): MenuItemProps => {
   const price = useWindowMessageListener('price');
   return {
-    derefContext: props.derefContext,
+    ...props,
     price,
   };
 };
@@ -84,6 +86,8 @@ export function Ec2InstanceHeader(
   props: PanelComponentProps<Ec2InstanceNavContext>,
 ) {
   const itemProps = useItemProps(props);
+  // TODO: We don't need this data, but preload it - show have a container for the panel components.
+  useNoteQuery(props.navContext.data.instanceId);
 
   return (
     <PanelHeaderMenu
@@ -113,54 +117,55 @@ export function Ec2InstanceContent(
   });
 }
 
-function MockNoteListEditor() {
-  const { notes, api } = useMockNotesApi();
-
-  return <NoteTextArea note={notes[0]} onSave={api.save} className="h-full" />;
-}
-
-interface MockNotesApiHook {
-  notes: Note[];
-  api: NoteApi;
-}
-
-const useMockNotesApi = (): MockNotesApiHook => {
-  const [notes, setNotes] = useState<Note[]>(() => {
-    const notes: Note[] = [];
-    for (let i = 0; i < 20; i++) {
-      notes.push({ id: randomString(10), body: `Lorem ipsum note ${i}` });
-    }
-    return notes;
-  });
-
-  const updateNotes = <T extends unknown>(
-    newNotes: Note[],
-    returnVal: T,
-  ): Promise<T> => {
-    return new Promise<T>((resolve) => {
-      setTimeout(() => {
-        setNotes(newNotes);
-        resolve(returnVal);
-      }, 300);
-    });
-  };
-
-  return {
-    notes,
-    api: {
-      save: async (note) => {
-        const newNotes = [...notes];
-
-        let noteId = note.id ?? randomString(10);
-        if (!note.id) {
-          noteId = randomString(10);
-          newNotes.unshift({ ...note, id: noteId });
-        } else {
-          const index = newNotes.findIndex((n) => n.id === note.id);
-          newNotes.splice(index, 1, { ...note, id: noteId });
-        }
-        return updateNotes(newNotes, undefined);
-      },
+// TODO: This is here because we preload in the header component.
+const useNoteQuery = (instanceId: string) => {
+  return useQuery(ResourceNoteDocument, {
+    variables: {
+      // TODO: Using instanceId instead of arn for now.
+      arn: instanceId,
     },
-  };
+  });
 };
+
+const NoteContainer = createQueryContainer({
+  useQuery: (props: PanelComponentProps<Ec2InstanceNavContext>) => {
+    return useNoteQuery(props.navContext.data.instanceId);
+  },
+  component: function NoteContainer(props) {
+    const [saveResourceNote] = useMutation(SaveResourceNoteDocument);
+
+    // TODO: Using instanceId instead of arn for now.
+    const arn = props.navContext.data.instanceId;
+
+    return (
+      <NoteTextArea
+        note={props.result.data.resourceNote ?? undefined}
+        onSave={async (note) => {
+          await saveResourceNote({
+            variables: {
+              input: {
+                arn,
+                body: note.body,
+              },
+            },
+            // TODO: Avoid this and use refetchQueries or similar as much as possible - in this case it's ok.
+            update: (cache, result) => {
+              if (result.data) {
+                cache.writeQuery({
+                  query: ResourceNoteDocument,
+                  variables: {
+                    arn,
+                  },
+                  data: {
+                    resourceNote: result.data.saveNoteForResource,
+                  },
+                });
+              }
+            },
+          });
+        }}
+        className="h-full"
+      />
+    );
+  },
+});
