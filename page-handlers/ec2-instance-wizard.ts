@@ -17,6 +17,7 @@ import {
   PageHandler,
   urlMatchesRegex,
   makeDerefExtensionContainer,
+  isNotIframe,
 } from './common';
 
 const getEc2Iframe = (): HTMLIFrameElement | null => {
@@ -70,6 +71,7 @@ const getDerefContainer = async (context: DerefContext) => {
 
 export const ec2InstanceWizard: PageHandler = {
   conditions: [
+    isNotIframe,
     urlMatchesRegex(
       /.*console.aws.amazon.com\/ec2\/v2\/home?.*#LaunchInstanceWizard:/,
     ),
@@ -93,6 +95,7 @@ export const ec2InstanceWizard: PageHandler = {
       const payload: DerefMessagePayloadOf<PriceMessage> = {
         hourlyCost: hourlyPrice,
         type: instanceSearch.instanceType,
+        lastUpdated: null,
       };
 
       broadcastMessageToIframes({ type: 'price', payload });

@@ -27,7 +27,7 @@ const contentMap: Map<
     'ec2Instance',
     {
       header: Ec2InstanceHeader,
-      content: Ec2InstanceContent as any,
+      content: Ec2InstanceContent,
     },
   ],
 ]);
@@ -61,7 +61,7 @@ export default function DerefPanel(props: RouteComponentProps) {
         },
       });
     }
-  }, [props.derefContext]);
+  }, [renderedContent, props.derefContext]);
 
   return (
     <div

@@ -1,0 +1,13 @@
+query ResourceNote($arn: String!)  {
+  resourceNote(arn: $arn) {
+    id
+    body
+  }
+}
+
+mutation SaveResourceNote($input: SaveNoteForResourceInput!) {
+  saveNoteForResource(note: $input) {
+    id
+    body
+  }
+}

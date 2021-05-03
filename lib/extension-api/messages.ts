@@ -6,6 +6,7 @@ export interface ExtensionBaseMessage<TPayload, TReturn> {
 
 export interface AuthenticatedUser {
   email: string;
+  apiToken: string;
 }
 
 export interface ExtensionInitMessage
@@ -23,10 +24,16 @@ export interface ExtensionLogoutMessage
   type: 'logout';
 }
 
+export interface ExtensionFrameOptionsExceptionMessage
+  extends ExtensionBaseMessage<void, void> {
+  type: 'frameOptionsException';
+}
+
 export type ExtensionMessage =
   | ExtensionInitMessage
   | ExtensionLoginMessage
-  | ExtensionLogoutMessage;
+  | ExtensionLogoutMessage
+  | ExtensionFrameOptionsExceptionMessage;
 
 export type ExtensionMessageType<
   TMessage extends ExtensionMessage
@@ -55,4 +62,5 @@ export type ExtensionMessageListener<
   TType extends ExtensionMessageType<TMessage>
 > = (
   payload: PayloadOfExtensionMessage<TMessage, TType>,
+  context?: { tabId: number },
 ) => Promise<ReturnTypeOfExtensionMessage<TMessage, TType>>;

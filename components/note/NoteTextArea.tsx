@@ -1,11 +1,17 @@
-import React, { ReactNode, useRef } from 'react';
-import TextAreaAutosize from 'react-textarea-autosize';
+import React, {
+  ReactNode,
+  useRef,
+  useCallback,
+  useState,
+  useEffect,
+} from 'react';
 import { Note, NoteApi } from '~/components/note/types';
-import { useStateBacked } from '~/lib/hooks/useStateBacked';
+import classNames from 'classnames';
+import { debounce } from 'debounce';
 
 interface ControlProps {
-  content: string;
-  save: () => Promise<string>;
+  body: string;
+  save: () => Promise<void>;
   reset: () => void;
   focus: () => void;
 }
@@ -15,66 +21,107 @@ interface Props {
   onSave: NoteApi['save'];
   renderControl?: (props: ControlProps) => ReactNode;
   autoFocus?: boolean;
-  saveOnBlur?: boolean;
-  minRows?: number;
+  autoSave?: boolean;
+  className?: string;
 }
 
-export default function NoteTextArea(props: Props) {
-  const [content, setContent] = useStateBacked<string>(
-    props.note?.content ?? '',
-    (prev) => props.note?.content ?? '',
-    [props.note?.id],
-  );
+type SaveState = 'saving' | 'saved' | 'error';
 
-  const savePromiseRef = useRef<Promise<string>>();
+const saveStates: Map<
+  SaveState,
+  {
+    name: string;
+    className: string;
+  }
+> = new Map([
+  [
+    'saving',
+    {
+      name: 'Saving...',
+      className: 'text-gray-400',
+    },
+  ],
+  [
+    'saved',
+    {
+      name: 'Saved',
+      className: 'text-green-600',
+    },
+  ],
+  [
+    'error',
+    {
+      name: 'Error saving',
+      className: 'text-red-600',
+    },
+  ],
+]);
+
+export default function NoteTextArea(props: Props) {
+  const [body, setBody] = useState(props.note?.body ?? '');
+  const [saveState, setSaveState] = useState<SaveState>();
+
+  // Store body in a ref for debounce below to work.
+  const bodyRef = useRef(body);
+  bodyRef.current = body;
 
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
   const controlProps: ControlProps = {
-    content,
+    body,
     save: async () => {
-      if (savePromiseRef.current) {
-        return savePromiseRef.current;
-      }
-      savePromiseRef.current = props.onSave({ id: props.note?.id, content });
-
+      const body = bodyRef.current;
+      setSaveState('saving');
       try {
-        return await savePromiseRef.current;
-      } finally {
-        savePromiseRef.current = undefined;
+        await props.onSave({ id: props.note?.id, body });
+        setSaveState('saved');
+      } catch (e: unknown) {
+        setSaveState('error');
       }
     },
-    reset: () => setContent(props.note?.content ?? ''),
+    reset: () => setBody(props.note?.body ?? ''),
     focus: () => textAreaRef.current?.focus(),
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- Using debounce.
+  const onKeyDown = useCallback(
+    debounce((e: React.KeyboardEvent) => {
+      void controlProps.save();
+    }, 1000),
+    [],
+  );
+
   return (
-    <div>
-      <TextAreaAutosize
-        ref={textAreaRef}
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        className="w-full"
-        placeholder="Add a note..."
-        minRows={props.minRows}
-        autoFocus={props.autoFocus}
-        onFocus={
-          props.autoFocus
-            ? (e) => {
-                const value = e.target.value;
-                e.target.value = '';
-                e.target.value = value;
-              }
-            : undefined
-        }
-        onBlur={props.saveOnBlur ? () => controlProps.save() : undefined}
-        onKeyDown={(e) => {
-          if (e.key === 'Escape') {
-            (e.target as HTMLTextAreaElement).blur();
+    <>
+      <div className={classNames('relative', props.className)}>
+        <textarea
+          ref={textAreaRef}
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          className="w-full h-full"
+          placeholder="Add a note..."
+          autoFocus={props.autoFocus}
+          onFocus={
+            props.autoFocus
+              ? (e) => {
+                  const value = e.target.value;
+                  e.target.value = '';
+                  e.target.value = value;
+                }
+              : undefined
           }
-        }}
-      />
+          onBlur={props.autoSave ? () => controlProps.save() : undefined}
+          onKeyDown={onKeyDown}
+        />
+        {!!saveState && (
+          <div className="absolute mb-2 mr-2" style={{ bottom: 0, right: 0 }}>
+            <div className={saveStates.get(saveState)?.className}>
+              {saveStates.get(saveState)?.name}
+            </div>
+          </div>
+        )}
+      </div>
       {props.renderControl?.(controlProps)}
-    </div>
+    </>
   );
 }

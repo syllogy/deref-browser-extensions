@@ -1,14 +1,15 @@
-import { browser } from 'webextension-polyfill-ts';
+import { browser, WebRequest } from 'webextension-polyfill-ts';
 import initBackgroundScript from '~/init-background-script';
 import webextensionApi from '~/lib/extension-api/webextension-api';
 import createAuth0Client from '@auth0/auth0-spa-js';
+import { doWarn } from '~/logging';
 
 initBackgroundScript({
   extensionApi: webextensionApi,
   auth0: () => {
     return createAuth0Client({
-      domain: 'deref-extension.us.auth0.com',
-      client_id: 'Kfo7nyY4PXggtS4r3vFOiaJnAAO0A2pP',
+      domain: 'deref.us.auth0.com',
+      client_id: '9KLuebquJDhIPzm1qFwULoyGVr2g01z2',
       scope: 'email',
       cacheLocation: 'localstorage',
       redirect_uri: browser.identity.getRedirectURL(),
@@ -41,3 +42,48 @@ initBackgroundScript({
     }
   },
 });
+
+webextensionApi.addListener(
+  'frameOptionsException',
+  async (_payload, context) => {
+    const tabId = context?.tabId;
+    if (!tabId) {
+      doWarn('No tab ID set');
+      return;
+    }
+
+    const isFirefox = (window as any).browser && browser.runtime;
+
+    const listener = (info: WebRequest.OnHeadersReceivedDetailsType) => {
+      const headers = info.responseHeaders;
+      if (!headers) {
+        doWarn('No headers in response');
+        return info;
+      }
+
+      for (let i = headers.length - 1; i >= 0; --i) {
+        const header = headers[i].name.toLowerCase();
+        if (header == 'x-frame-options' || header == 'frame-options') {
+          headers.splice(i, 1); // Remove header.
+        }
+      }
+      return { responseHeaders: headers };
+    };
+
+    // TODO: More narrowly scope this exception.
+    browser.webRequest.onHeadersReceived.addListener(
+      listener,
+      { urls: ['*://*.aws.amazon.com/*'], types: ['sub_frame'], tabId },
+
+      // Modern Chrome needs "extraHeaders" to access these headers but Firefox
+      // forbids it.
+      isFirefox
+        ? ['blocking', 'responseHeaders']
+        : ['blocking', 'responseHeaders', 'extraHeaders'],
+    );
+
+    setTimeout(() => {
+      browser.webRequest.onHeadersReceived.removeListener(listener);
+    }, 15_000);
+  },
+);

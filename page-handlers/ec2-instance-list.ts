@@ -1,3 +1,5 @@
+import { getCloudTrailEvents } from '~/lib/cloudtrail/client';
+import { getCloudTrailXsrfToken } from '~/lib/cloudtrail/xsrf';
 import { doWarn } from '~/logging';
 import {
   PriceMessage,
@@ -17,10 +19,15 @@ import {
   PageHandler,
   urlMatchesRegex,
   makeDerefExtensionContainer,
+  getRegionCode,
+  isNotIframe,
 } from './common';
 
 const getEc2Iframe = (): HTMLIFrameElement | null => {
   const iframe = document.getElementById('compute-react-frame');
+  if (!iframe) {
+    return null;
+  }
   if (!(iframe instanceof HTMLIFrameElement)) {
     doWarn('Expected element is not an iframe');
     return null;
@@ -48,7 +55,44 @@ const getInstanceSearch = (): IndexSearch | null => {
   return isIndexSearch(search) ? search : null;
 };
 
-const getDerefContainer = async (context: DerefContext) => {
+const getLastUpdatedInfo = async (): Promise<null | {
+  at: Date;
+  by: string;
+}> => {
+  const instanceId = getLabelledValue('label-for-Instance ID')
+    ?.split(/\s+/)
+    .pop()
+    ?.trim();
+  if (!instanceId) {
+    doWarn('No instance ID found');
+    return null;
+  }
+
+  const xsrfToken = await getCloudTrailXsrfToken();
+  if (!xsrfToken) {
+    doWarn('Cloudtrail XSRF token not found');
+    return null;
+  }
+  const region = getRegionCode();
+  let lastUpdated: null | { at: Date; by: string } = null;
+  for await (const event of getCloudTrailEvents({
+    region,
+    lookupField: 'ResourceName',
+    lookupValue: instanceId,
+    xsrfToken,
+  })) {
+    lastUpdated =
+      !lastUpdated || lastUpdated.at.getTime() < event.eventTime
+        ? { at: new Date(event.eventTime), by: event.username }
+        : lastUpdated;
+  }
+
+  return lastUpdated;
+};
+
+const getDerefContainer = async (
+  context: DerefContext,
+): Promise<HTMLIFrameElement | null> => {
   const ec2Iframe = getEc2Iframe();
   const parent = ec2Iframe?.contentDocument?.querySelector(
     'h4.awsui-util-ml-m',
@@ -58,6 +102,7 @@ const getDerefContainer = async (context: DerefContext) => {
 
 export const ec2InstanceList: PageHandler = {
   conditions: [
+    isNotIframe,
     urlMatchesRegex(/.*console.aws.amazon.com\/ec2\/v2\/home?.*#Instances:/),
   ],
   navContextUpdater: (prevNavContext) => {
@@ -97,6 +142,7 @@ export const ec2InstanceList: PageHandler = {
     const payload: DerefMessagePayloadOf<PriceMessage> = {
       hourlyCost: hourlyPrice,
       type: instanceSearch.instanceType,
+      lastUpdated: await getLastUpdatedInfo(),
     };
 
     broadcastMessageToIframes({ type: 'price', payload });
