@@ -7,8 +7,10 @@ import {
   DerefMessagePayloadOf,
 } from '~/page-handlers/messages';
 import classNames from 'classnames';
-import PriceIcon from './svg/PriceIcon';
 import { numberWithCommas } from '~/lib/util/number';
+import InstanceIcon from './svg/InstanceIcon';
+import PriceIcon from './svg/PriceIcon';
+import ClockIcon from './svg/ClockIcon';
 
 interface Props extends RouteComponentProps {
   price?: DerefMessagePayloadOf<PriceMessage>;
@@ -58,6 +60,7 @@ export default function PriceBar(props: Props) {
         </div>
       )}
       <div className={cellClass}>
+        <InstanceIcon width={16} height={16} className="mr-2 mb-px" />
         <span className="mr-1 font-semibold">{price.type}</span>
         <span className="mr-1">Instance</span>
       </div>
@@ -70,10 +73,9 @@ export default function PriceBar(props: Props) {
       </div>
       {price.lastUpdated ? (
         <div className={cellClass}>
-          <span className="mr-1">
-            {price.lastUpdated.by}{' '}
-            <TimeAgo className="lighter" date={price.lastUpdated.at} />
-          </span>
+          <ClockIcon width={16} height={16} className="mr-2 mb-px" />
+          <span className="mr-2">{price.lastUpdated.by} </span>
+          <TimeAgo className="text-gray-400" date={price.lastUpdated.at} />
         </div>
       ) : null}
     </div>
