@@ -8,7 +8,7 @@ initBackgroundScript({
   extensionApi: webextensionApi,
   auth0: () => {
     return createAuth0Client({
-      domain: 'deref.us.auth0.com',
+      domain: 'auth.deref.io',
       client_id: '9KLuebquJDhIPzm1qFwULoyGVr2g01z2',
       scope: 'email',
       cacheLocation: 'localstorage',
