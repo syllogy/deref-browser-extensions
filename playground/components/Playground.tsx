@@ -15,7 +15,7 @@ initBackgroundScript({
   extensionApi: mockextensionApi,
   auth0: async () => {
     const auth0 = await createAuth0Client({
-      domain: 'deref.us.auth0.com',
+      domain: 'auth.deref.io',
       client_id: '9KLuebquJDhIPzm1qFwULoyGVr2g01z2',
       scope: 'email',
       cacheLocation: 'localstorage',
