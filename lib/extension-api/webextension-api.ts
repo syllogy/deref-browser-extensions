@@ -23,6 +23,7 @@ const webextensionApi: ExtensionApi = {
       }
     });
   },
+
   sendMessage: async <
     TMessage extends ExtensionMessage,
     TType extends ExtensionMessageType<TMessage>
@@ -37,6 +38,9 @@ const webextensionApi: ExtensionApi = {
 
     return browser.runtime.sendMessage(msg);
   },
+
+  omnibox: browser.omnibox,
+  tabs: browser.tabs,
 };
 
 export default webextensionApi;

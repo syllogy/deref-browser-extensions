@@ -37,5 +37,6 @@
     "https://*.auth0.com/",
     "https://*.deref.io/",
     "*://*.aws.amazon.com/*"
-  ]
+  ],
+  "omnibox": { "keyword": "deref" }
 }

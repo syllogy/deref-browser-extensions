@@ -1,6 +1,7 @@
 import { ExtensionApi } from '~/lib/extension-api/api';
 import { Auth0Client } from '@auth0/auth0-spa-js';
 import { AuthenticatedUser } from '~/lib/extension-api/messages';
+import { initOmnibox } from '~/lib/omnibox';
 
 // TODO: Tokens do not currently expire, but when we introduce expirations, the check will go here.
 const isTokenExpired = (apiToken: string) => false;
@@ -96,6 +97,8 @@ const initBackgroundScript = ({
     const auth0 = await getAuth0();
     await logout(auth0);
   });
+
+  initOmnibox(extensionApi);
 };
 
 export default initBackgroundScript;

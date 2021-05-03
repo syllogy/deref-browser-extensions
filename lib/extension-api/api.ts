@@ -1,3 +1,4 @@
+import type { Omnibox, Tabs } from 'webextension-polyfill-ts';
 import {
   ExtensionMessageListener,
   ReturnTypeOfExtensionMessage,
@@ -22,4 +23,12 @@ export interface ExtensionApi {
     type: TType,
     payload: PayloadOfExtensionMessage<TMessage, TType>,
   ) => Promise<ReturnTypeOfExtensionMessage<TMessage, TType>>;
+
+  omnibox: Omnibox;
+
+  tabs: Tabs;
 }
+
+export type Omnibox = Omnibox.Static;
+
+export type Tabs = Pick<Tabs.Static, 'update' | 'create'>;
