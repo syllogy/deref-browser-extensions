@@ -49,14 +49,7 @@ const menuItems: MenuItem[] = [
       return (
         <>
           <PriceIcon height={16} width={16} className="mr-2" />
-          Price{' '}
-          {props.price ? (
-            <span className="ml-1 text-xs text-gray-400 mt-1">
-              (${(props.price.hourlyCost * 730).toFixed(2)})
-            </span>
-          ) : (
-            ''
-          )}
+          Price
         </>
       );
     },

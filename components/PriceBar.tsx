@@ -7,14 +7,11 @@ import {
 } from '~/page-handlers/messages';
 import classNames from 'classnames';
 import PriceIcon from './svg/PriceIcon';
+import { numberWithCommas } from '~/lib/util/number';
 
 interface Props extends RouteComponentProps {
   price?: DerefMessagePayloadOf<PriceMessage>;
   vertical?: boolean;
-}
-
-function numberWithCommas(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 export default function PriceBar(props: Props) {
@@ -66,7 +63,7 @@ export default function PriceBar(props: Props) {
       <div className={cellClass}>
         <PriceIcon width={16} height={16} className="mr-2 mb-px" />
         <span className="mr-1 font-semibold">
-          {numberWithCommas((price.hourlyCost * 730).toFixed(2))}
+          {numberWithCommas(price.hourlyCost * 730)}
         </span>
         <span className="mr-1 text-gray-400">/ month</span>
       </div>
