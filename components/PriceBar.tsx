@@ -32,7 +32,7 @@ export default function PriceBar(props: Props) {
   return (
     <div
       className={classNames(
-        'rounded border border-gray-300 shadow flex m-1 overflow-hidden',
+        'rounded border border-gray-300 bg-white shadow flex m-1 overflow-hidden',
         {
           'flex-col': props.vertical,
         },
