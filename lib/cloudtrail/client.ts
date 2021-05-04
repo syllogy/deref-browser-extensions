@@ -3,56 +3,21 @@ import { doWarn } from '~/logging';
 
 // Unhelpfully the types returned in the frontend proxy
 // are different from the official API types.
-// This is a first pass and probably quite wrong.
 const CloudTrailEvent = rt.Record({
   eventId: rt.String,
-  eventVersion: rt.Optional(rt.String),
-  username: rt.String,
+  eventName: rt.String,
+  readOnly: rt.Union(rt.Literal('false'), rt.Literal('true')),
+  accessKeyId: rt.String,
   eventTime: rt.Number,
   eventSource: rt.String,
-  eventName: rt.Optional(rt.String),
-  awsRegion: rt.Optional(rt.String),
-  sourceIPAddress: rt.Optional(rt.String),
-  userAgent: rt.Optional(rt.String),
-  requestParameters: rt.Optional(
+  username: rt.String,
+  resources: rt.Array(
     rt.Record({
-      roleArn: rt.Optional(rt.String),
-      roleSessionName: rt.Optional(rt.String),
-      durationSeconds: rt.Optional(rt.Number),
+      resourceType: rt.String,
+      resourceName: rt.String,
     }),
   ),
-  responseElements: rt.Optional(
-    rt.Record({
-      credentials: rt.Optional(
-        rt.Record({
-          accessKeyId: rt.String,
-          expiration: rt.String,
-          sessionToken: rt.String,
-        }),
-      ),
-      assumedRoleUser: rt.Optional(
-        rt.Record({
-          assumedRoleId: rt.String,
-          arn: rt.String,
-        }),
-      ),
-    }),
-  ),
-  requestId: rt.Optional(rt.String),
-  readOnly: rt.Optional(rt.String),
-  resources: rt.Optional(
-    rt.Array(
-      rt.Record({
-        resourceName: rt.String,
-        resourceType: rt.String,
-      }),
-    ),
-  ),
-  eventType: rt.Optional(rt.String),
-  managementEvent: rt.Optional(rt.Boolean),
-  eventCategory: rt.Optional(rt.String),
-  recipientAccountId: rt.Optional(rt.String),
-  sharedEventID: rt.Optional(rt.String),
+  cloudTrailEvent: rt.String,
 });
 
 type CloudTrailEvent = rt.Static<typeof CloudTrailEvent>;
@@ -64,7 +29,7 @@ const ResponseData = rt.Record({
 type ResponseData = rt.Static<typeof ResponseData>;
 type LookupField = 'ResourceName';
 
-export const getCloudTrailEvents = async function* ({
+export const getCloudTrailEvents = async function*({
   lookupField,
   lookupValue,
   region,
@@ -106,7 +71,9 @@ export const getCloudTrailEvents = async function* ({
   }
 
   for (const event of data.events) {
-    yield event;
+    if (event.readOnly !== 'false') {
+      yield event;
+    }
   }
 
   // TODO handle pagination
