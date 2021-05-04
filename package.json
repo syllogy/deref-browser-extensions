@@ -3,7 +3,7 @@
   "version": "0.0.7",
   "scripts": {
     "dev": "./scripts/dev.sh",
-    "dev-chromium": "./scripts/dev-chromium.sh",
+    "dev-chromium": "./scripts/dev.sh --chromium",
     "playground": "vite -c ./playground/vite.config.ts",
     "lint": "eslint && cd ./dist && web-ext lint",
     "clean": "./scripts/clean.sh",
