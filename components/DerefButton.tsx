@@ -7,10 +7,10 @@ import DerefLogoLong from '~/components/svg/DerefLogoLong';
 
 export default function DerefButton(props: RouteComponentProps) {
   return (
-    <div className="h-full flex items-center">
+    <div className="h-full w-full flex items-center justify-center">
       <div
         className={classNames(
-          'h-full px-4 fill-current flex items-center select-none cursor-pointer font-medium',
+          'h-full w-full px-4 fill-current flex items-center select-none cursor-pointer font-medium',
           {
             'border-gray-600 bg-gray-900 hover:bg-gray-800 border-l text-white pb-px': !props
               .derefContext.panelState.visible,

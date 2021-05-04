@@ -45,8 +45,11 @@ const routes = {
   button: createRoute({
     component: DerefButton,
     style: context => ({
-      height: '36px',
-      width: '128px',
+      height: '40px',
+      width: '120px',
+      marginTop: '-2px',
+      marginBottom: '-3px',
+      marginRight: '-24px',
     }),
   }),
   priceBar: createRoute({
