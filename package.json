@@ -13,7 +13,8 @@
     "reindex-prices": "./scripts/reindex-prices.sh",
     "graphql-download": "apollo schema:download graphql/schema.json --endpoint=https://extension.deref.io/graphql",
     "graphql-codegen": "graphql-codegen --config graphql/codegen.yml --watch",
-    "graphql-codegen-once": "graphql-codegen --config graphql/codegen.yml"
+    "graphql-codegen-once": "graphql-codegen --config graphql/codegen.yml",
+    "postinstall": "patch-package"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "csv-parse": "^4.15.4",
     "debounce": "^1.2.1",
     "node-fetch": "^2.6.1",
+    "patch-package": "^6.4.7",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-timeago": "^5.2.0",
