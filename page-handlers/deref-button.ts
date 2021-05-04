@@ -9,7 +9,7 @@ export const derefButton: PageHandler = {
   conditions: [
     isNotIframe,
     urlMatchesRegex(/.*console.aws.amazon.com/),
-    () => false, // Temporarily disable the button.
+    // () => false, Temporarily disable the button.
   ],
   async handler(context) {
     void makeDerefExtensionContainer({
