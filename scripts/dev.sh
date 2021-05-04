@@ -19,6 +19,9 @@ if [[ "${1-}" == "--chromium" ]]; then
   chromium_target="--target=chromium"
 fi
 
+# TODO: CSS Watcher.
+npm run compile-css
+
 (cd dist && web-ext run --verbose $chromium_target "--start-url=$start_url") &
 esbuild --bundle --target=firefox86,chrome88 --outdir='./dist/src' ./*.ts ./*.tsx --watch &
 
