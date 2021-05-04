@@ -75,7 +75,7 @@ export default function NoteTextArea(props: Props) {
       try {
         await props.onSave({ id: props.note?.id, body });
         setSaveState('saved');
-      } catch (e: unknown) {
+      } catch (e) {
         setSaveState('error');
       }
     },
@@ -97,13 +97,13 @@ export default function NoteTextArea(props: Props) {
         <textarea
           ref={textAreaRef}
           value={body}
-          onChange={(e) => setBody(e.target.value)}
-          className="w-full h-full"
+          onChange={e => setBody(e.target.value)}
+          className="w-full h-full outline-none resize-none"
           placeholder="Add a note..."
           autoFocus={props.autoFocus}
           onFocus={
             props.autoFocus
-              ? (e) => {
+              ? e => {
                   const value = e.target.value;
                   e.target.value = '';
                   e.target.value = value;
