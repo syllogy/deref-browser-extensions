@@ -71,7 +71,7 @@ export const getCloudTrailEvents = async function*({
   }
 
   for (const event of data.events) {
-    if (event.readOnly !== 'false') {
+    if (event.readOnly !== 'true') {
       yield event;
     }
   }
