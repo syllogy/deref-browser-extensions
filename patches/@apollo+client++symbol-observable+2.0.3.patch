@@ -1,3 +1,9 @@
+This patch is copied from the upstream implementation and fixes the
+@apollo/client for use in firefox. This is already fixed in
+benlesh/symbol-observable but @apollo/client hasn't been updated to use the
+latest version of symbol-observable.
+https://github.com/benlesh/symbol-observable/commit/ef81924c506ba2fcc171a9b9b78a7a290fbff7b2
+
 diff --git a/node_modules/@apollo/client/node_modules/symbol-observable/es/ponyfill.js b/node_modules/@apollo/client/node_modules/symbol-observable/es/ponyfill.js
 index 7105662..8024913 100644
 --- a/node_modules/@apollo/client/node_modules/symbol-observable/es/ponyfill.js
@@ -8,7 +14,7 @@ index 7105662..8024913 100644
 -	var Symbol = root.Symbol;
 +  var result;
 +  var Symbol = root.Symbol;
- 
+
 -	if (typeof Symbol === 'function') {
 -		if (Symbol.observable) {
 -			result = Symbol.observable;
@@ -39,7 +45,7 @@ index 7105662..8024913 100644
 +  } else {
 +    result = '@@observable';
 +  }
- 
+
 -			// This just needs to be something that won't trample other user's Symbol.for use
 -			// It also will guide people to the source of their issues, if this is problematic.
 -			// META: It's a resource locator!
