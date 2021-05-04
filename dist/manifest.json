@@ -34,7 +34,6 @@
     "identity",
     "webRequest",
     "webRequestBlocking",
-    "https://*.auth0.com/",
     "https://*.deref.io/",
     "*://*.aws.amazon.com/*"
   ],
